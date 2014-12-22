@@ -2,19 +2,29 @@ import java.io.*;
 import java.util.*;
 
 import java.awt.*;
-import java.swing.*;
+import javax.swing.*;
 import java.awt.event.*;
 import java.awt.image.*;
-import javaz.imageio.*;
+import javax.imageio.*;
 
-public class Gui implements ActionListener {
+public class Gui extends JFrame /* implements ActionListener */ {
+    private Container pane;
+    private JFrame frame;
+    private JButton b1, b2;
+    
     public Gui() {
-	private JFrame frame;
 
+	frame = new JFrame();
+	frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	frame.getContentPane().setLayout(new GridLayout());
+	pane.setLayout(new GridLayout(9,5));
+
+	b1 = new JButton("");
+	pane.add(b1);
 
     }
 
     public static void main(String[] args) {
-	new Gui();
+	Gui g = new Gui();
     }
 }
