@@ -7,11 +7,12 @@ import java.awt.event.*;
 import java.awt.image.*;
 import javax.imageio.*;
 
-public class Gui extends JFrame /*implements ActionListener*/{
+public class Gui extends JFrame /*implements ActionListener*/ {
     
     private JFrame overall;
-    private JPanel choose, play1;
+    private JPanel top, play1;
     private JTable play2;
+    private ButtonGroup selection;
     private JRadioButton A,B,C,D;
     private JButton[][] grid;
     private JLabel counter;
@@ -27,29 +28,32 @@ public class Gui extends JFrame /*implements ActionListener*/{
 	//overall.setLayout(new BoxLayout(overall,BoxLayout.Y_AXIS));
 	
 
-	choose = new JPanel();
-	choose.setLayout(new GridLayout(1,4));
-	overall.add(choose, BorderLayout.PAGE_START);
+	top = new JPanel();
+	top.setLayout(new GridLayout(1,4));
+	overall.add(top, BorderLayout.PAGE_START);
 
 	counter = new JLabel("Counter: 0", JLabel.RIGHT);
-	choose.add(counter);
+	top.add(counter);
 
         A = new JRadioButton("A");
 	A.setActionCommand("A");
 	A.setSelected(true);
 	
         B = new JRadioButton("B");
-	//choose.add(B);
+	
         C = new JRadioButton("C");
-	//choose.add(C);
+
         D = new JRadioButton("D");
-	//choose.add(D);
 
-	choose.add(A);
-	choose.add(B);
-	choose.add(C);
-	choose.add(D);
-
+	selection = new ButtonGroup();
+	selection.add(A);
+	selection.add(B);
+	selection.add(C);
+        selection.add(D);
+	top.add(A);
+	top.add(B);
+	top.add(C);
+	top.add(D);
 	//A.addActionListener(this);
 
         /*
@@ -71,8 +75,25 @@ public class Gui extends JFrame /*implements ActionListener*/{
 	    play2.setRowHeight(i, 75);
 	}
 	play2.setRowSelectionAllowed(false);
+	play2.setEnabled(false);
+	play2.setShowGrid(true);
+	play2.setGridColor(Color.BLUE);
 	overall.add(play2, BorderLayout.CENTER);
 
+
+	play2.addMouseListener(new MouseAdapter() {
+		public void mouseClicked(MouseEvent e) {
+		    if (e.getClickCount() == 2) {
+			JTable target = (JTable)e.getSource();
+			int row = target.getSelectedRow();
+			int column = target.getSelectedColumn();
+			sunCount += 5;//do something here
+			counterChange();
+		    }
+		}
+	    });
+
+	
 	/*
 	play1 = new JPanel(new GridLayout(5,9));
 	grid = new JButton[5][9];
