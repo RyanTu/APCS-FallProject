@@ -7,13 +7,16 @@ import java.awt.event.*;
 import java.awt.image.*;
 import javax.imageio.*;
 
-public class Gui extends JFrame implements ActionListener{
+public class Gui extends JFrame /*implements ActionListener*/{
     
     private JFrame overall;
     private JPanel choose, play1;
     private JTable play2;
     private JRadioButton A,B,C,D;
     private JButton[][] grid;
+    private JLabel counter;
+
+    public int sunCount = 9;
    
     public Gui() {
 	
@@ -27,6 +30,9 @@ public class Gui extends JFrame implements ActionListener{
 	choose = new JPanel();
 	choose.setLayout(new GridLayout(1,4));
 	overall.add(choose, BorderLayout.PAGE_START);
+
+	counter = new JLabel("Counter: 0", JLabel.RIGHT);
+	choose.add(counter);
 
         A = new JRadioButton("A");
 	A.setActionCommand("A");
@@ -44,13 +50,14 @@ public class Gui extends JFrame implements ActionListener{
 	choose.add(C);
 	choose.add(D);
 
-	A.addActionListener(this);
+	//A.addActionListener(this);
 
-        
+        /*
        	public void actionPerformed(ActionEvent e){
 	    //play2.setCellRenderer(new DefaultTableCellRenderer() {
 	    
 	}
+	*/
 
 	/*
 	play2 = new JPanel();
@@ -78,9 +85,18 @@ public class Gui extends JFrame implements ActionListener{
 	overall.add(play1, BorderLayout.CENTER);
 	*/
 	
-	overall.pack();
- overall.setVisible(true);
 
+	overall.pack();
+	overall.setVisible(true);
+
+    }
+
+    public int getSunCount(){
+	return sunCount;
+    }
+
+    public void counterChange(){
+	counter.setText("Counter: " + getSunCount());
     }
 
     public static void main(String[] args) {
