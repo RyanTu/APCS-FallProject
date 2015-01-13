@@ -7,7 +7,7 @@ import java.awt.event.*;
 import java.awt.image.*;
 import javax.imageio.*;
 
-public class Gui extends JFrame implements ActionListener{
+public class Gui extends JFrame /*implements ActionListener*/ {
     
     private JFrame overall;
     private JPanel top, play1;
@@ -17,7 +17,7 @@ public class Gui extends JFrame implements ActionListener{
     private JButton[][] grid;
     private JLabel counter;
 
-    public int sunCount = 9;
+    public int sunCount = 0;
    
     public Gui() {
 	
@@ -77,7 +77,7 @@ public class Gui extends JFrame implements ActionListener{
 	play2.setRowSelectionAllowed(false);
 	play2.setEnabled(false);
 	play2.setShowGrid(true);
-	play2.setGridColor(Color.BLUE);
+	play2.setGridColor(Color.BLACK);
 	overall.add(play2, BorderLayout.CENTER);
 
 

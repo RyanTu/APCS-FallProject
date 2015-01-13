@@ -17,7 +17,7 @@ public class Gui extends JFrame /*implements ActionListener*/ {
     private JButton[][] grid;
     private JLabel counter;
 
-    public int sunCount = 9;
+    public int sunCount = 0;
    
     public Gui() {
 	
@@ -77,7 +77,7 @@ public class Gui extends JFrame /*implements ActionListener*/ {
 	play2.setRowSelectionAllowed(false);
 	play2.setEnabled(false);
 	play2.setShowGrid(true);
-	play2.setGridColor(Color.BLUE);
+	play2.setGridColor(Color.BLACK);
 	overall.add(play2, BorderLayout.CENTER);
 
 
@@ -119,8 +119,9 @@ public class Gui extends JFrame /*implements ActionListener*/ {
     public void counterChange(){
 	counter.setText("Counter: " + getSunCount());
     }
-
+    /*
     public static void main(String[] args) {
 	Gui g = new Gui();
     }
+    */
 }
