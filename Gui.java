@@ -3,6 +3,7 @@ import java.util.*;
 
 import java.awt.*;
 import javax.swing.*;
+import javax.swing.table.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import javax.imageio.*;
@@ -105,6 +106,9 @@ public class Gui extends JFrame /*implements ActionListener*/ {
 	}
 	overall.add(play1, BorderLayout.CENTER);
 	*/
+
+	
+
 	
 
 	overall.pack();
@@ -119,4 +123,13 @@ public class Gui extends JFrame /*implements ActionListener*/ {
     public void counterChange(){
 	counter.setText("Counter: " + getSunCount());
     }
+
+    public void populate() {
+	ImageIcon ShooterOne = new ImageIcon("ShooterOne.png");
+	play2.getValueAt(0,0) = new JButton("plant");
+	play2.setIcon(ShooterOne);
+
+
+    }
+
 }
