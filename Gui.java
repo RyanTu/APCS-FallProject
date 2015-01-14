@@ -8,11 +8,12 @@ import java.awt.event.*;
 import java.awt.image.*;
 import javax.imageio.*;
 
-public class Gui extends JFrame /*implements ActionListener*/ {
+public class Gui extends JFrame {
     
     private JFrame overall;
+    private JLayeredPane gameBoard;
     private JPanel top, play1;
-    private JTable play2;
+    //private JTable play2;
     private ButtonGroup selection;
     private JRadioButton A,B,C,D;
     private JButton[][] grid;
@@ -26,14 +27,13 @@ public class Gui extends JFrame /*implements ActionListener*/ {
 	overall.setSize(600,600);
 	overall.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	overall.setLayout(new BorderLayout());
-	//overall.setLayout(new BoxLayout(overall,BoxLayout.Y_AXIS));
 	
 
 	top = new JPanel();
-	top.setLayout(new GridLayout(1,4));
+	top.setLayout(new GridLayout());
 	overall.add(top, BorderLayout.PAGE_START);
 
-	counter = new JLabel("Counter: 0", JLabel.RIGHT);
+	counter = new JLabel("Counter: 0", JLabel.CENTER);
 	top.add(counter);
 
         A = new JRadioButton("A");
@@ -71,6 +71,7 @@ public class Gui extends JFrame /*implements ActionListener*/ {
 	overall.add(play2);
 	*/
 
+	/*
 	play2 = new JTable(5,9);
 	for (int i = 0; i < 5; i++) {
 	    play2.setRowHeight(i, 75);
@@ -80,9 +81,28 @@ public class Gui extends JFrame /*implements ActionListener*/ {
 	play2.setShowGrid(true);
 	play2.setGridColor(Color.BLACK);
 	overall.add(play2, BorderLayout.CENTER);
+	*/
 
 
-	play2.addMouseListener(new MouseAdapter() {
+	gameBoard = new JLayeredPane();
+	gameBoard.setBorder(BorderFactory.createLineBorder(Color.black));
+	overall.add(gameBoard, BorderLayout.CENTER);
+	
+	
+	play1 = new JPanel(new GridLayout(5,9));
+	grid = new JButton[5][9];
+	for (int y = 0; y < 9; y++){
+	    for (int x = 0; x < 5; x++){
+		grid[x][y] = new JButton();
+		play1.add(grid[x][y]);
+	    }
+	}
+	overall.add(gameBoard);
+	
+
+	
+
+	play1.addMouseListener(new MouseAdapter() {
 		public void mouseClicked(MouseEvent e) {
 		    if (e.getClickCount() == 2) {
 			JTable target = (JTable)e.getSource();
@@ -93,25 +113,9 @@ public class Gui extends JFrame /*implements ActionListener*/ {
 		    }
 		}
 	    });
-
-	
-	/*
-	play1 = new JPanel(new GridLayout(5,9));
-	grid = new JButton[5][9];
-	for (int y = 0; y < 9; y++){
-	    for (int x = 0; x < 5; x++){
-		grid[x][y] = new JButton();
-		play1.add(grid[x][y]);
-	    }
-	}
-	overall.add(play1, BorderLayout.CENTER);
-	*/
-
 	
 
-	
-
-	overall.pack();
+	//overall.pack();
 	overall.setVisible(true);
 
     }
@@ -124,12 +128,14 @@ public class Gui extends JFrame /*implements ActionListener*/ {
 	counter.setText("Counter: " + getSunCount());
     }
 
+    
     public void populate() {
 	ImageIcon ShooterOne = new ImageIcon("ShooterOne.png");
-	play2.getValueAt(0,0) = new JButton("plant");
-	play2.setIcon(ShooterOne);
+	//play1.getValueAt(0,0) = new JButton("plant");
+	//play1.setIcon(ShooterOne);
 
 
     }
+    
 
 }
