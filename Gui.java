@@ -11,7 +11,7 @@ import javax.imageio.*;
 public class Gui extends JFrame {
     
     private JFrame overall;
-    private JLayeredPane gameBoard;
+    private JPanel gameBoard;
     private JPanel top, play1;
     //private JTable play2;
     private ButtonGroup selection;
@@ -84,23 +84,26 @@ public class Gui extends JFrame {
 	*/
 
 
-	gameBoard = new JLayeredPane();
-	gameBoard.setBorder(BorderFactory.createLineBorder(Color.black));
+	gameBoard = new JPanel();
 	overall.add(gameBoard, BorderLayout.CENTER);
+gameBoard.setBackground(Color.orange);
 	
 	
-	play1 = new JPanel(new GridLayout(5,9));
+	play1 = new JPanel(new GridLayout(5,9));	
+	play1.setOpaque(false);
 	grid = new JButton[5][9];
 	for (int y = 0; y < 9; y++){
 	    for (int x = 0; x < 5; x++){
 		grid[x][y] = new JButton();
+		grid[x][y].setContentAreaFilled(false);
 		play1.add(grid[x][y]);
 	    }
 	}
-	overall.add(gameBoard);
+	//gameBoard.add(play1);
+	overall.add(play1);
 	
 
-	
+	/*
 
 	play1.addMouseListener(new MouseAdapter() {
 		public void mouseClicked(MouseEvent e) {
@@ -114,6 +117,7 @@ public class Gui extends JFrame {
 		}
 	    });
 	
+	*/
 
 	//overall.pack();
 	overall.setVisible(true);
