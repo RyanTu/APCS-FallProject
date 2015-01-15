@@ -8,12 +8,11 @@ import java.awt.event.*;
 import java.awt.image.*;
 import javax.imageio.*;
 
-public class Gui extends JFrame {
+public class Gui extends JFrame{
     
     private JFrame overall;
     private JPanel gameBoard;
-    private JPanel top, play1;
-    //private JTable play2;
+    private JPanel top, play;
     private ButtonGroup selection;
     private JRadioButton A,B,C,D;
     private JButton[][] grid;
@@ -22,12 +21,19 @@ public class Gui extends JFrame {
     public int sunCount = 0;
    
     public Gui() {
-	
+
 	overall = new JFrame();
 	overall.setSize(600,600);
 	overall.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	overall.setLayout(new BorderLayout());
 	
+
+	ActionListener listener = new ActionListener() {
+		public void actionPerformed(ActionEvent e) {
+		    System.out.println("Button selected: " + e.getActionCommand());
+	        }
+	    };
+    
 
 	top = new JPanel();
 	top.setLayout(new GridLayout());
@@ -57,52 +63,25 @@ public class Gui extends JFrame {
 	top.add(D);
 	//A.addActionListener(this);
 
-        /*
-       	public void actionPerformed(ActionEvent e){
-	    //play2.setCellRenderer(new DefaultTableCellRenderer() {
-	    
-	}
-	*/
-
-	/*
-	play2 = new JPanel();
-	play2.setLayout(new GridLayout(5,9));
-	play2.setBorder(BorderFactory.createLineBorder(Color.black));
-	overall.add(play2);
-	*/
-
-	/*
-	play2 = new JTable(5,9);
-	for (int i = 0; i < 5; i++) {
-	    play2.setRowHeight(i, 75);
-	}
-	play2.setRowSelectionAllowed(false);
-	play2.setEnabled(false);
-	play2.setShowGrid(true);
-	play2.setGridColor(Color.BLACK);
-	overall.add(play2, BorderLayout.CENTER);
-	*/
-
-
 	gameBoard = new JPanel();
 	overall.add(gameBoard, BorderLayout.CENTER);
-gameBoard.setBackground(Color.orange);
-	
-	
-	play1 = new JPanel(new GridLayout(5,9));	
-	play1.setOpaque(false);
+		
+	play = new JPanel(new GridLayout(5,9));	
+	//play.setOpaque(false);
 	grid = new JButton[5][9];
 	for (int y = 0; y < 9; y++){
 	    for (int x = 0; x < 5; x++){
-		grid[x][y] = new JButton();
+		String text = String.format("[%d, %d]", y%9, x/5);
+		grid[x][y] = new JButton(text);
 		grid[x][y].setContentAreaFilled(false);
-		play1.add(grid[x][y]);
+		grid[x][y].setPreferredSize(new Dimension(100,100));
+		grid[x][y].addActionListener(listener);
+		play.add(grid[x][y]);
 	    }
 	}
-	//gameBoard.add(play1);
-	overall.add(play1);
-	
-
+	gameBoard.add(play);
+	//overall.add(play);
+        
 	/*
 
 	play1.addMouseListener(new MouseAdapter() {
@@ -119,7 +98,7 @@ gameBoard.setBackground(Color.orange);
 	
 	*/
 
-	//overall.pack();
+	overall.pack();
 	overall.setVisible(true);
 
     }
