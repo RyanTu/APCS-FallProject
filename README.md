@@ -12,4 +12,7 @@ Changes
 1/6: Added grid <br>
 1/7 - 1/8: Continued to work on grid <br>
 1/9: Added action listener <br>
-1/11: Tested mouselistener & added grid lines & fixed radio buttons
+1/12: Tested mouselistener & added grid lines & fixed radio buttons <br>
+1/13: Continued editing grid and added classes to test function <br>
+1/14: Reverted back to using buttons and layered pane <br>
+
