@@ -31,6 +31,8 @@ public class Gui extends JFrame{
 	ActionListener listener = new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 		    System.out.println("Button selected: " + e.getActionCommand());
+		    paintComponent(gameBoard);
+		    
 	        }
 	    };
     
@@ -68,15 +70,23 @@ public class Gui extends JFrame{
 		
 	play = new JPanel(new GridLayout(5,9));	
 	//play.setOpaque(false);
-	grid = new JButton[5][9];
+	grid = new JButton[9][9];
+	int counterX = 0;
+	int counterY = 0;
 	for (int y = 0; y < 9; y++){
 	    for (int x = 0; x < 5; x++){
-		String text = String.format("[%d, %d]", y%9, x/5);
+		String text = String.format("[%d, %d]", counterY, counterX);
 		grid[x][y] = new JButton(text);
 		grid[x][y].setContentAreaFilled(false);
 		grid[x][y].setPreferredSize(new Dimension(100,100));
 		grid[x][y].addActionListener(listener);
 		play.add(grid[x][y]);
+		if (counterX < 8){
+		    counterX++;
+		} else {
+		    counterX = 0;
+		    counterY++;
+		}
 	    }
 	}
 	gameBoard.add(play);
@@ -107,10 +117,25 @@ public class Gui extends JFrame{
 	return sunCount;
     }
 
+    public void setSunCount(int sunCount) {
+        this.sunCount = sunCount;
+    }
+
     public void counterChange(){
 	counter.setText("Counter: " + getSunCount());
     }
 
+   
+	
+	public void paintComponent(Graphics g){
+	    super.paintComponent(g);
+	    g.setColor(Color.green);
+	    g.fillOval(x,y,30,30);
+	}
+    
+    /* TO DO: Figure out how to give an area on JPanel gameBoard the properties
+       of a class using action listener
+              Figure out how to insert an object using action listener*/
     
     public void populate() {
 	ImageIcon ShooterOne = new ImageIcon("ShooterOne.png");
