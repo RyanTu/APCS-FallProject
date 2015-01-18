@@ -31,8 +31,6 @@ public class Gui extends JFrame{
 	ActionListener listener = new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
 		    System.out.println("Button selected: " + e.getActionCommand());
-		    paintComponent(gameBoard);
-		    
 	        }
 	    };
     
@@ -63,13 +61,11 @@ public class Gui extends JFrame{
 	top.add(B);
 	top.add(C);
 	top.add(D);
-	//A.addActionListener(this);
 
 	gameBoard = new JPanel();
 	overall.add(gameBoard, BorderLayout.CENTER);
 		
-	play = new JPanel(new GridLayout(5,9));	
-	//play.setOpaque(false);
+	play = new JPanel(new GridLayout(5,9)); 
 	grid = new JButton[9][9];
 	int counterX = 0;
 	int counterY = 0;
@@ -79,7 +75,7 @@ public class Gui extends JFrame{
 		grid[x][y] = new JButton(text);
 		grid[x][y].setContentAreaFilled(false);
 		grid[x][y].setPreferredSize(new Dimension(100,100));
-		grid[x][y].addActionListener(listener);
+		grid[x][y].addActionListener(new plantAdd());
 		play.add(grid[x][y]);
 		if (counterX < 8){
 		    counterX++;
@@ -90,7 +86,6 @@ public class Gui extends JFrame{
 	    }
 	}
 	gameBoard.add(play);
-	//overall.add(play);
         
 	/*
 
@@ -124,18 +119,19 @@ public class Gui extends JFrame{
     public void counterChange(){
 	counter.setText("Counter: " + getSunCount());
     }
-
-   
 	
-	public void paintComponent(Graphics g){
-	    super.paintComponent(g);
-	    g.setColor(Color.green);
-	    g.fillOval(x,y,30,30);
+
+    /* Need to build on code: currently will add to bottom of screen but shows
+       after resizing. Will have to find out how to fix this and how to specify
+       location. */
+    private class plantAdd implements ActionListener{
+	public void actionPerformed(ActionEvent e){
+	    JLabel image = new JLabel();
+	    image.setIcon(new ImageIcon("ShooterOne.png"));
+	    gameBoard.add(image);
+	    
 	}
-    
-    /* TO DO: Figure out how to give an area on JPanel gameBoard the properties
-       of a class using action listener
-              Figure out how to insert an object using action listener*/
+    }
     
     public void populate() {
 	ImageIcon ShooterOne = new ImageIcon("ShooterOne.png");
@@ -145,5 +141,7 @@ public class Gui extends JFrame{
 
     }
     
-
 }
+
+
+
