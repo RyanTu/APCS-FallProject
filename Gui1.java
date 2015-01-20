@@ -66,6 +66,9 @@ public class Gui1 extends JFrame{
 	top.add(C);
 	top.add(D);
 
+	gameBoard = new JPanel();
+	overall.add(gameBoard, BorderLayout.CENTER);
+	
 	gridMaker();
 
 	bottom = new JPanel();
@@ -167,25 +170,15 @@ System.out.println
 	    setSunCount(0);
 	    counterChange();
 	    
-	    for (int y = 0; y < 9; y++){
-		for (int x = 0; x < 5; x++){
-		    
-		    overall.remove(btn);
-		    overall.validate();
-		    overall.repaint();
-		}
-	    }
+	    gameBoard.remove(play);
+	    gameBoard.validate();
+	    gameBoard.repaint();
 	    
-	    // play.revalidate();
-	    //overall.repaint();
-	// clearBoard() : method to get rid of everything that has happened 
+	    gridMaker();
 	}
     }
     
-    public void gridMaker() {
-	gameBoard = new JPanel();
-	overall.add(gameBoard, BorderLayout.CENTER);
-		
+    public void gridMaker() {	
 	play = new JPanel(new GridLayout(5,9)); 
 	grid = new JButton[5][9];
 	int counterX = 0;
@@ -219,3 +212,7 @@ System.out.println
     }
     
 }
+
+/* TO DO:
+- FIND A WAY TO REMOVE AN IMAGE IN A SINGLE BUTTON
+*/
