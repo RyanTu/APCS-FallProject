@@ -16,7 +16,7 @@ public class Gui extends JFrame{
     private JPanel gameBoard; 
     /* gameBoard is the JPanel intended to be where shooting objects occur. 
        Should there be JLayeredPanel for our purposes? */
-    private JPanel top, play; 
+    private JPanel top, play, bottom; 
     /* top holds JLabel counter and ButtonGroup selection, 
        play is where JButton[][] grid is */
 
@@ -27,6 +27,7 @@ public class Gui extends JFrame{
     private JButton[][] grid;
 
     private JButton start; 
+    private JButton reset;
 
     public int sunCount = 0;
     public int sunflowerNumber = 0;
@@ -46,7 +47,7 @@ public class Gui extends JFrame{
 	top.add(counter);
 
         A = new JRadioButton("A");
-	A.setActionCommand("A");
+	//A.setActionCommand("A");
 	A.setSelected(true);
 	
         B = new JRadioButton("B");
@@ -74,11 +75,12 @@ public class Gui extends JFrame{
 	int counterY = 0;
 	for (int y = 0; y < 9; y++){
 	    for (int x = 0; x < 5; x++){
+		JLabel test = new JLabel();
 		String text = String.format("[%d, %d]", counterY, counterX);
 		grid[x][y] = new JButton(text);
 		grid[x][y].setContentAreaFilled(false);
 		grid[x][y].setPreferredSize(new Dimension(125,125));
-		grid[x][y].addActionListener(new plantAdd());
+		grid[x][y].addActionListener(new PlantAdd());
 		play.add(grid[x][y]);
 		if (counterX < 8){
 		    counterX++;
@@ -89,6 +91,18 @@ public class Gui extends JFrame{
 	    }
 	}
 	gameBoard.add(play);
+
+	bottom = new JPanel();
+	bottom.setLayout(new GridLayout(1,3));
+	overall.add(bottom, BorderLayout.PAGE_END);
+
+	start = new JButton("Start");
+	start.addActionListener(new Begin());
+	bottom.add(start);
+
+	reset = new JButton("Reset");
+	reset.addActionListener(new End());
+	bottom.add(reset);
         
 	/*
 
@@ -131,23 +145,21 @@ public class Gui extends JFrame{
 	this.sunflowerNumber = sunflowerNumber;
     }
 	
-    private class plantAdd implements ActionListener{
+    private class PlantAdd implements ActionListener{
 	public void actionPerformed(ActionEvent e){
+	    JButton btn = (JButton) e.getSource();
 	    if (A.isSelected() && getSunCount()>=50){
-		JButton btn = (JButton) e.getSource();
 		JLabel image = new JLabel();
 		image.setIcon(new ImageIcon("Sunflower.png"));
 		btn.add(image);
 		gameBoard.revalidate();
-		overall.repaint();
+		//overall.repaint();
 		setSunCount(getSunCount()-50);
 		counterChange();
 		setSf(getSf()+1);
-		System.out.println(getSf());
 	    }
 
 	    if (B.isSelected() && getSunCount()>=100){
-		JButton btn = (JButton) e.getSource();
 		JLabel image = new JLabel();
 		image.setIcon(new ImageIcon("ShooterOne.png"));
 		btn.add(image);
@@ -157,6 +169,42 @@ public class Gui extends JFrame{
 		counterChange();
 	    }
 	    
+	}
+    }
+
+    
+    private class Begin implements ActionListener{
+	public void actionPerformed(ActionEvent e){
+	    setSunCount(75);
+	    counterChange();
+	    
+	/*
+	long startTime = System.nanoTime();
+	for (startTime%500 == 0){
+System.out.println 
+	*/
+	}
+    }
+    
+
+    private class End implements ActionListener{
+	public void actionPerformed(ActionEvent e){
+	    setSunCount(0);
+	    counterChange();
+	    /*
+	    for (int y = 0; y < 9; y++){
+		for (int x = 0; x < 5; x++){
+		    JButton btn = (JButton) e.getSource();
+		    JLabel blank = new JLabel();
+		    blank.setIcon(new ImageIcon("Blank.png"));
+		    grid[x][y].add(blank);
+		}
+	    }
+	    */
+	    
+	    play.revalidate();
+	    overall.repaint();
+	// clearBoard() : method to get rid of everything that has happened 
 	}
     }
     
