@@ -191,16 +191,15 @@ System.out.println
 	public void actionPerformed(ActionEvent e){
 	    setSunCount(0);
 	    counterChange();
-	    /*
+	    
 	    for (int y = 0; y < 9; y++){
 		for (int x = 0; x < 5; x++){
 		    JButton btn = (JButton) e.getSource();
 		    JLabel blank = new JLabel();
-		    blank.setIcon(new ImageIcon("Blank.png"));
-		    grid[x][y].add(blank);
+		    blank.remove(image);
 		}
 	    }
-	    */
+	    
 	    
 	    play.revalidate();
 	    overall.repaint();
