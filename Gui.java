@@ -11,14 +11,25 @@ import javax.imageio.*;
 public class Gui extends JFrame{
     
     private JFrame overall;
-    private JPanel gameBoard;
-    private JPanel top, play;
+    /* overall is the frame where all the panels are on */
+
+    private JPanel gameBoard; 
+    /* gameBoard is the JPanel intended to be where shooting objects occur. 
+       Should there be JLayeredPanel for our purposes? */
+    private JPanel top, play; 
+    /* top holds JLabel counter and ButtonGroup selection, 
+       play is where JButton[][] grid is */
+
+    private JLabel counter; 
     private ButtonGroup selection;
     private JRadioButton A,B,C,D;
+
     private JButton[][] grid;
-    private JLabel counter;
+
+    private JButton start; 
 
     public int sunCount = 0;
+    public int sunflowerNumber = 0;
    
     public Gui() {
 
@@ -26,14 +37,6 @@ public class Gui extends JFrame{
 	overall.setSize(600,600);
 	overall.setDefaultCloseOperation(EXIT_ON_CLOSE);
 	overall.setLayout(new BorderLayout());
-	
-
-	ActionListener listener = new ActionListener() {
-		public void actionPerformed(ActionEvent e) {
-		    System.out.println("Button selected: " + e.getActionCommand());
-	        }
-	    };
-    
 
 	top = new JPanel();
 	top.setLayout(new GridLayout());
@@ -66,7 +69,7 @@ public class Gui extends JFrame{
 	overall.add(gameBoard, BorderLayout.CENTER);
 		
 	play = new JPanel(new GridLayout(5,9)); 
-	grid = new JButton[9][9];
+	grid = new JButton[5][9];
 	int counterX = 0;
 	int counterY = 0;
 	for (int y = 0; y < 9; y++){
@@ -74,7 +77,7 @@ public class Gui extends JFrame{
 		String text = String.format("[%d, %d]", counterY, counterX);
 		grid[x][y] = new JButton(text);
 		grid[x][y].setContentAreaFilled(false);
-		grid[x][y].setPreferredSize(new Dimension(100,100));
+		grid[x][y].setPreferredSize(new Dimension(125,125));
 		grid[x][y].addActionListener(new plantAdd());
 		play.add(grid[x][y]);
 		if (counterX < 8){
@@ -119,16 +122,40 @@ public class Gui extends JFrame{
     public void counterChange(){
 	counter.setText("Counter: " + getSunCount());
     }
-	
 
-    /* Need to build on code: currently will add to bottom of screen but shows
-       after resizing. Will have to find out how to fix this and how to specify
-       location. */
+    public int getSf(){
+	return sunflowerNumber;
+    }
+
+    public void setSf(int sunflowerNumber){
+	this.sunflowerNumber = sunflowerNumber;
+    }
+	
     private class plantAdd implements ActionListener{
 	public void actionPerformed(ActionEvent e){
-	    JLabel image = new JLabel();
-	    image.setIcon(new ImageIcon("ShooterOne.png"));
-	    gameBoard.add(image);
+	    if (A.isSelected() && getSunCount()>=50){
+		JButton btn = (JButton) e.getSource();
+		JLabel image = new JLabel();
+		image.setIcon(new ImageIcon("Sunflower.png"));
+		btn.add(image);
+		gameBoard.revalidate();
+		overall.repaint();
+		setSunCount(getSunCount()-50);
+		counterChange();
+		setSf(getSf()+1);
+		System.out.println(getSf());
+	    }
+
+	    if (B.isSelected() && getSunCount()>=100){
+		JButton btn = (JButton) e.getSource();
+		JLabel image = new JLabel();
+		image.setIcon(new ImageIcon("ShooterOne.png"));
+		btn.add(image);
+		gameBoard.revalidate();
+		overall.repaint();
+		setSunCount(getSunCount()-100);
+		counterChange();
+	    }
 	    
 	}
     }
