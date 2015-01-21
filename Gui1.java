@@ -26,12 +26,13 @@ public class Gui1 extends JFrame{
 
     private JButton[][] grid;
 
-    private JButton start; 
-    private JButton reset;
+    private JButton start, reset;
 
     public int sunCount = 0;
     public int sunflowerNumber = 0;
    
+    Timer t = new Timer();
+
     public Gui1() {
 
 	overall = new JFrame();
@@ -151,22 +152,12 @@ public class Gui1 extends JFrame{
 	}
     }
 
-
-    /*
-    private class PlantRemove implements ActionListener{
-	public void actionPerformed(ActionEvent e) {
-            overall.remove((Component) e.getSource());
-            overall.validate();
-            overall.repaint();
-	}
-    }
-    */    
-
     private class Begin implements ActionListener{
 	public void actionPerformed(ActionEvent e){
 	    setSunCount(75);
 	    counterChange();
 	    
+	    //t.scheduleAtFixedRate()
 	/*
 	long startTime = System.nanoTime();
 	for (startTime%500 == 0){
@@ -222,7 +213,3 @@ System.out.println
     }
     
 }
-
-/* TO DO:
-- FIND A WAY TO REMOVE AN IMAGE IN A SINGLE BUTTON
-*/
