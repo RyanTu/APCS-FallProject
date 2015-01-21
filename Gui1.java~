@@ -31,7 +31,7 @@ public class Gui1 extends JFrame{
     public int sunCount = 0;
     public int sunflowerNumber = 0;
    
-    Timer timer = new Timer();
+    //    Timer t = new Timer();
 
     public Gui1() {
 
@@ -172,11 +172,6 @@ public class Gui1 extends JFrame{
 	for (startTime%500 == 0){
 System.out.println 
 	*/
-	    /*	    timer.scheduleAtFixedRate(new TimerTask() {
-		    public void run() {
-		    }
-		}, 2*60*1000, 2*60*1000);
-	    */
 	}
     }
 
