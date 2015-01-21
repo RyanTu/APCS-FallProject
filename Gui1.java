@@ -151,7 +151,17 @@ public class Gui1 extends JFrame{
 	}
     }
 
-    
+
+    /*
+    private class PlantRemove implements ActionListener{
+	public void actionPerformed(ActionEvent e) {
+            overall.remove((Component) e.getSource());
+            overall.validate();
+            overall.repaint();
+	}
+    }
+    */    
+
     private class Begin implements ActionListener{
 	public void actionPerformed(ActionEvent e){
 	    setSunCount(75);
