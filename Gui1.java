@@ -31,7 +31,7 @@ public class Gui1 extends JFrame{
     public int sunCount = 0;
     public int sunflowerNumber = 0;
    
-    Timer timer = new Timer();
+    public Timer timer = new Timer(1000, this);
 
     public Gui1() {
 
@@ -47,15 +47,15 @@ public class Gui1 extends JFrame{
 	counter = new JLabel("Counter: 0", JLabel.CENTER);
 	top.add(counter);
 
-        A = new JRadioButton("A");
+        A = new JRadioButton("Sunflower");
 	//A.setActionCommand("A");
 	A.setSelected(true);
 	
-        B = new JRadioButton("B");
+        B = new JRadioButton("Pea Shooter");
 	
-        C = new JRadioButton("C");
+        C = new JRadioButton("Double Shooter");
 
-        D = new JRadioButton("D");
+        D = new JRadioButton("Triple Shooter");
 
 	selection = new ButtonGroup();
 	selection.add(A);
@@ -165,7 +165,8 @@ public class Gui1 extends JFrame{
 	public void actionPerformed(ActionEvent e){
 	    setSunCount(75);
 	    counterChange();
-	    
+	    //timer = new Timer(1000, this);
+	    //timer.start();
 	    //t.scheduleAtFixedRate()
 	/*
 	long startTime = System.nanoTime();
@@ -190,6 +191,7 @@ System.out.println
 	    gameBoard.repaint();
 	    
 	    gridMaker();
+	    //timer.reset();
 	}
     }
     
@@ -219,7 +221,18 @@ System.out.println
 	}
 	gameBoard.add(play);
     }
-
+    
+    public static void wait(int n) {
+	try {
+	    Thread.sleep(n);
+	} catch (Exception e) {}
+    }
+    
+    /*
+    timer = new timer(speed, this);
+    timer.setInitialDelay(pause);
+    timer.start();
+    */
     public void populate() {
 	ImageIcon ShooterOne = new ImageIcon("ShooterOne.png");
 	//play1.getValueAt(0,0) = new JButton("plant");
