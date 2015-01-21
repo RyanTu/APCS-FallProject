@@ -31,7 +31,7 @@ public class Gui1 extends JFrame{
     public int sunCount = 0;
     public int sunflowerNumber = 0;
    
-    public Timer timer = new Timer(1000, this);
+    //public Timer timer = new Timer(1000, this);
 
     public Gui1() {
 
@@ -144,7 +144,7 @@ public class Gui1 extends JFrame{
 		image.setIcon(new ImageIcon("ShooterOne.png"));
 		btn.add(image);
 		gameBoard.revalidate();
-		overall.repaint();
+		//overall.repaint();
 		setSunCount(getSunCount()-100);
 		counterChange();
 	    }
@@ -166,7 +166,7 @@ public class Gui1 extends JFrame{
 	    setSunCount(75);
 	    counterChange();
 	    //timer = new Timer(1000, this);
-	    timer.start();
+	    //timer.start();
 	    //t.scheduleAtFixedRate()
 	/*
 	long startTime = System.nanoTime();
@@ -191,7 +191,7 @@ System.out.println
 	    gameBoard.repaint();
 	    
 	    gridMaker();
-	    timer.reset();
+	    //timer.reset();
 	}
     }
     
@@ -221,13 +221,13 @@ System.out.println
 	}
 	gameBoard.add(play);
     }
-    /*
+    
     public static void wait(int n) {
 	try {
 	    Thread.sleep(n);
 	} catch (Exception e) {}
     }
-    */
+    
     /*
     timer = new timer(speed, this);
     timer.setInitialDelay(pause);
@@ -241,4 +241,6 @@ System.out.println
 
     }
     
+
+
 }
