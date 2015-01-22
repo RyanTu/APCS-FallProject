@@ -272,8 +272,9 @@ public class Gui1 extends JFrame{
     */
 
     public void addZombie(){
-	image.setIcon(new ImageIcon("Zombie1.png"));
-	grid[8][random.nextInt(5)].add(image);
+	JLabel image2 = new JLabel();
+	image2.setIcon(new ImageIcon("Zombie1.png"));
+	grid[8][random.nextInt(5)].add(image2);
 	gameBoard.revalidate();               
     }
 
