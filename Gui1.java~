@@ -30,7 +30,9 @@ public class Gui1 extends JFrame{
 
     public int sunCount = 0;
     public int sunflowerNumber = 0;
-   
+
+    private Random random = new Random();   
+    private boolean isStarted;
     //public Timer timer = new Timer(1000, this);
 
     public Gui1() {
@@ -162,23 +164,33 @@ public class Gui1 extends JFrame{
     }
 
     private class Begin implements ActionListener{
-	public void actionPerformed(ActionEvent e){
-	    setSunCount(75);
-	    counterChange();
-	    //timer = new Timer(1000, this);
-	    //timer.start();
-	    //t.scheduleAtFixedRate()
-	/*
-	long startTime = System.nanoTime();
-	for (startTime%500 == 0){
-System.out.println 
-	*/
-	    /*	    timer.scheduleAtFixedRate(new TimerTask() {
-		    public void run() {
-		    }
-		}, 2*60*1000, 2*60*1000);
-	    */
-	}
+	//if (isStarted == false) {
+	    public void actionPerformed(ActionEvent e){
+		setSunCount(75);
+		counterChange();
+		
+		JLabel image = new JLabel();
+		image.setIcon(new ImageIcon("Zombie1.png"));
+		grid[8][random.nextInt(5)].add(image);
+		gameBoard.revalidate();
+		isStarted = true;
+		//overall.repaint();                                                             
+		
+		//timer = new Timer(1000, this);
+		//timer.start();
+		//t.scheduleAtFixedRate()
+		/*
+		  long startTime = System.nanoTime();
+		  for (startTime%500 == 0){
+		  System.out.println 
+		*/
+		/*	    timer.scheduleAtFixedRate(new TimerTask() {
+			    public void run() {
+			    }
+			    }, 2*60*1000, 2*60*1000);
+		*/
+	    }
+	//} else null;
     }
 
     private class End implements ActionListener{
@@ -191,6 +203,7 @@ System.out.println
 	    gameBoard.repaint();
 	    
 	    gridMaker();
+	    isStarted = false;
 	    //timer.reset();
 	}
     }

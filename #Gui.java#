@@ -8,7 +8,7 @@ import java.awt.event.*;
 import java.awt.image.*;
 import javax.imageio.*;
 
-public class Gui1 extends JFrame{
+public class Gui extends JFrame{
     
     private JFrame overall;
     /* overall is the frame where all the panels are on */
@@ -26,16 +26,15 @@ public class Gui1 extends JFrame{
 
     private JButton[][] grid;
 
-    private JButton start, reset;
+    private JButton start; 
+    private JButton reset;
 
     public int sunCount = 0;
     public int sunflowerNumber = 0;
 
-    private Random random = new Random();   
-    private boolean isStarted;
-    //public Timer timer = new Timer(1000, this);
-
-    public Gui1() {
+    private Random random = new Random();
+   
+    public Gui() {
 
 	overall = new JFrame();
 	overall.setSize(600,600);
@@ -49,15 +48,15 @@ public class Gui1 extends JFrame{
 	counter = new JLabel("Counter: 0", JLabel.CENTER);
 	top.add(counter);
 
-        A = new JRadioButton("Sunflower");
+        A = new JRadioButton("A");
 	//A.setActionCommand("A");
 	A.setSelected(true);
 	
-        B = new JRadioButton("Pea Shooter");
+        B = new JRadioButton("B");
 	
-        C = new JRadioButton("Double Shooter");
+        C = new JRadioButton("C");
 
-        D = new JRadioButton("Triple Shooter");
+        D = new JRadioButton("D");
 
 	selection = new ButtonGroup();
 	selection.add(A);
@@ -71,8 +70,29 @@ public class Gui1 extends JFrame{
 
 	gameBoard = new JPanel();
 	overall.add(gameBoard, BorderLayout.CENTER);
-	
-	gridMaker();
+		
+	play = new JPanel(new GridLayout(5,9)); 
+	grid = new JButton[5][9];
+	int counterX = 0;
+	int counterY = 0;
+	for (int y = 0; y < 9; y++){
+	    for (int x = 0; x < 5; x++){
+		JLabel test = new JLabel();
+		String text = String.format("[%d, %d]", counterY, counterX);
+		grid[x][y] = new JButton(text);
+		grid[x][y].setContentAreaFilled(false);
+		grid[x][y].setPreferredSize(new Dimension(125,125));
+		grid[x][y].addActionListener(new PlantAdd());
+		play.add(grid[x][y]);
+		if (counterX < 8){
+		    counterX++;
+		} else {
+		    counterX = 0;
+		    counterY++;
+		}
+	    }
+	}
+	gameBoard.add(play);
 
 	bottom = new JPanel();
 	bottom.setLayout(new GridLayout(1,3));
@@ -146,106 +166,49 @@ public class Gui1 extends JFrame{
 		image.setIcon(new ImageIcon("ShooterOne.png"));
 		btn.add(image);
 		gameBoard.revalidate();
-		//overall.repaint();
+		overall.repaint();
 		setSunCount(getSunCount()-100);
 		counterChange();
 	    }
 	    
-	   
-	    
-	    JButton btn1 = (JButton) e.getSource();
-	    System.out.println("clicked column " + btn1.getClientProperty("column")
-				   + ", row " + btn1.getClientProperty("row"));
-	    btn1.putClientProperty("column", (int)btn1.getClientProperty("column")+1);
-	    System.out.println(btn1.getClientProperty("column"));
-	    btn1.validate();
-	    overall.repaint();
 	}
     }
 
+    
     private class Begin implements ActionListener{
-	//if (isStarted == false) {
-	    public void actionPerformed(ActionEvent e){
-		setSunCount(75);
-		counterChange();
-		
-		JLabel image = new JLabel();
-		image.setIcon(new ImageIcon("Zombie1.png"));
-		grid[7][random.nextInt(5)].add(image);
-		gameBoard.revalidate();
-		isStarted = true;
-		//overall.repaint();                                                             
-		
-		//timer = new Timer(1000, this);
-		//timer.start();
-		//t.scheduleAtFixedRate()
-		/*
-		  long startTime = System.nanoTime();
-		  for (startTime%500 == 0){
-		  System.out.println 
-		*/
-		/*	    timer.scheduleAtFixedRate(new TimerTask() {
-			    public void run() {
-			    }
-			    }, 2*60*1000, 2*60*1000);
-		*/
-	    }
-	//} else null;
+	public void actionPerformed(ActionEvent e){
+	    setSunCount(75);
+	    counterChange();
+	    
+	/*
+	long startTime = System.nanoTime();
+	for (startTime%500 == 0){
+System.out.println 
+	*/
+	}
     }
+    
 
     private class End implements ActionListener{
 	public void actionPerformed(ActionEvent e){
 	    setSunCount(0);
 	    counterChange();
 	    
-	    gameBoard.remove(play);
-	    gameBoard.validate();
-	    gameBoard.repaint();
-	    
-	    gridMaker();
-	    isStarted = false;
-	    //timer.reset();
-	}
-    }
-    
-    public void gridMaker() {	
-	play = new JPanel(new GridLayout(5,9)); 
-	grid = new JButton[5][9];
-	int counterX = 0;
-	int counterY = 0;
-	for (int y = 0; y < 9; y++){
-	    for (int x = 0; x < 5; x++){
-		//JLabel test = new JLabel();
-		//String text = String.format("[%d, %d]", counterY, counterX);
-		grid[x][y] = new JButton(/*text*/);
-		grid[x][y].setContentAreaFilled(false);
-		grid[x][y].setPreferredSize(new Dimension(125,125));
-		grid[x][y].addActionListener(new PlantAdd());
-		grid[x][y].putClientProperty("column", x);
-		grid[x][y].putClientProperty("row", y);
-		play.add(grid[x][y]);
-		if (counterX < 8){
-		    counterX++;
-		} else {
-		    counterX = 0;
-		    counterY++;
+	    for (int y = 0; y < 9; y++){
+		for (int x = 0; x < 5; x++){
+		    JButton btn = (JButton) e.getSource();
+		    JLabel blank = new JLabel();
+		    blank.remove(image);
 		}
 	    }
+	    
+	    
+	    play.revalidate();
+	    overall.repaint();
+	// clearBoard() : method to get rid of everything that has happened 
 	}
-	gameBoard.add(play);
     }
     
-    public static void wait(int n) {
-	try {
-	    Thread.sleep(n);
-	} catch (Exception e) {}
-    }
-    
-    /*
-    timer = new timer(speed, this);
-    timer.setInitialDelay(pause);
-    timer.start();
-    */
     public void populate() {
 	ImageIcon ShooterOne = new ImageIcon("ShooterOne.png");
 	//play1.getValueAt(0,0) = new JButton("plant");
@@ -254,6 +217,7 @@ public class Gui1 extends JFrame{
 
     }
     
-
-
 }
+
+
+
