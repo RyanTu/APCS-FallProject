@@ -49,15 +49,15 @@ public class Gui1 extends JFrame{
 	counter = new JLabel("Counter: 0", JLabel.CENTER);
 	top.add(counter);
 
-        A = new JRadioButton("Sunflower");
+        A = new JRadioButton("Sunflower (25 suns)");
 	//A.setActionCommand("A");
 	A.setSelected(true);
 	
-        B = new JRadioButton("Pea Shooter");
+        B = new JRadioButton("Pea Shooter (100 suns)");
 	
-        C = new JRadioButton("Double Shooter");
+        C = new JRadioButton("Chomper (125 suns)");
 
-        D = new JRadioButton("Triple Shooter");
+        D = new JRadioButton("Gatling Pea Shooter (200 suns)");
 
 	selection = new ButtonGroup();
 	selection.add(A);
@@ -150,7 +150,26 @@ public class Gui1 extends JFrame{
 		setSunCount(getSunCount()-100);
 		counterChange();
 	    }
+
+	    if (C.isSelected() && getSunCount()>=125){
+                JLabel image = new JLabel();
+                image.setIcon(new ImageIcon("Chomper.png"));
+                btn.add(image);
+                gameBoard.revalidate();
+                //overall.repaint();                                                             
+                setSunCount(getSunCount()-125);
+                counterChange();
+            }
 	    
+	    if (D.isSelected() && getSunCount()>=200){
+                JLabel image = new JLabel();
+                image.setIcon(new ImageIcon("GatlingPea.png"));
+                btn.add(image);
+                gameBoard.revalidate();
+                //overall.repaint();                                                             
+                setSunCount(getSunCount()-200);
+                counterChange();
+            }
 	   
 	    
 	    JButton btn1 = (JButton) e.getSource();
@@ -171,7 +190,7 @@ public class Gui1 extends JFrame{
 		
 		JLabel image = new JLabel();
 		image.setIcon(new ImageIcon("Zombie1.png"));
-		grid[7][random.nextInt(5)].add(image);
+		grid[0][1].add(image);
 		gameBoard.revalidate();
 		isStarted = true;
 		//overall.repaint();                                                             

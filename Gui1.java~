@@ -171,7 +171,7 @@ public class Gui1 extends JFrame{
 		
 		JLabel image = new JLabel();
 		image.setIcon(new ImageIcon("Zombie1.png"));
-		grid[8][random.nextInt(5)].add(image);
+		grid[0][0].add(image);
 		gameBoard.revalidate();
 		isStarted = true;
 		//overall.repaint();                                                             
