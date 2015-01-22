@@ -155,6 +155,7 @@ public class Gui1 extends JFrame{
 		setSunCount(getSunCount()-50);
 		counterChange();
 		setSf(getSf()+1);
+		btn.putClientProperty("sunflower", 1);
 	    }
 
 	    if (B.isSelected() && getSunCount()>=100){
@@ -164,6 +165,7 @@ public class Gui1 extends JFrame{
 		//overall.repaint();
 		setSunCount(getSunCount()-100);
 		counterChange();
+		btn.putClientProperty("peashooter", 1);
 	    }
 
 	    if (C.isSelected() && getSunCount()>=125){
@@ -173,6 +175,7 @@ public class Gui1 extends JFrame{
                 //overall.repaint();                                                             
                 setSunCount(getSunCount()-125);
                 counterChange();
+                btn.putClientProperty("chomper", 1);
             }
 	    
 	    if (D.isSelected() && getSunCount()>=200){
@@ -182,6 +185,7 @@ public class Gui1 extends JFrame{
                 //overall.repaint();                                                             
                 setSunCount(getSunCount()-200);
                 counterChange();
+		btn.putClientProperty("gatlingpea", 1);
             }
 	    if (r.isSelected()){
 		//play.remove(btn);
@@ -210,7 +214,7 @@ public class Gui1 extends JFrame{
 		setSunCount(75);
 		counterChange();
 		
-		addZombie();
+		addZombie(8, random.nextInt(5), 10);
 	    }
 	    /*   
 	    t.scheduleAtFixedRate(new TimerTask() {
@@ -293,23 +297,30 @@ public class Gui1 extends JFrame{
     timer.start();
     */
 
-    public void addZombie(){
+    public void addZombie(int column, int row, int health){
 	JLabel image2 = new JLabel();
+	//int roww = random.nextInt(5);
 	image2.setIcon(new ImageIcon("Zombie1.png"));
-	grid[8][random.nextInt(5)].add(image2);
+	grid[column][row].add(image2);
 	gameBoard.revalidate();               
+	grid[column][row].putClientProperty("zombie", 1);
+	grid[x][y].putClientProperty("zombieHealth", health);
     }
 
-    /*
-    public void move(){
-	for (int y = 0; y<4; y++){
+    
+    public void zombieMove(){
+	for (int y = 0; y<5; y++){
 	    for (int x = 0; x<9; x++){
-		grid[x][y+1] = grid[x][y];
-		grid[x][y] = new JButton();
-	    }
+		if(grid[x][y].getClientProperty("zombie")==1){
+		    addZombie((x-1), y, grid[x][y].getClientProperty("health"));
+		    //grid[x-1][y].ad
+		    //grid[x-1][y].putClientProperty("zombie", 1);
+		    grid[x][y].removeAll();
+		}
+	    }	
 	}
     }
-    */
+    
 
     public void populate() {
 	ImageIcon ShooterOne = new ImageIcon("ShooterOne.png");
