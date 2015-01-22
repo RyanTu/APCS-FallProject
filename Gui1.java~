@@ -21,7 +21,7 @@ public class Gui1 extends JFrame{
     /* top holds JLabel counter and ButtonGroup selection, 
        play is where JButton[][] grid is */
 
-    private JLabel counter,image; 
+    private JLabel counter; 
     private ButtonGroup selection;
     private JRadioButton A,B,C,D,r;
 
@@ -145,6 +145,7 @@ public class Gui1 extends JFrame{
     private class PlantEdit implements ActionListener{
 	public void actionPerformed(ActionEvent e){
 	    JButton btn = (JButton) e.getSource();
+	    JLabel image = new JLabel();
 	    if (A.isSelected() && getSunCount()>=50){
 		image.setIcon(new ImageIcon("Sunflower.png"));
 		btn.add(image);
@@ -182,8 +183,13 @@ public class Gui1 extends JFrame{
                 counterChange();
             }
 	    if (r.isSelected()){
-		image.setIcon(null);
-		btn.add(image);
+		play.remove(btn);
+		buttonMaker((Integer) btn.getClientProperty("column"), (Integer) btn.getClientProperty("row"));
+		//play.remove(btn);
+		//grid[btn.getClientProperty("column")][btn.getClientProperty("row")] = new JButton;
+		
+		//image.setIcon(null);
+		//btn.add(image);
 		gameBoard.revalidate();
 	    }
 	    
@@ -231,32 +237,46 @@ public class Gui1 extends JFrame{
     public void gridMaker() {	
 	play = new JPanel(new GridLayout(5,9)); 
 	grid = new JButton[9][5];
-        image = new JLabel();
+	//image = new JLabel();
 	int counterX = 0;
 	int counterY = 0;
 	for (int y = 0; y < 5; y++){
 	    for (int x = 0; x < 9; x++){
+		buttonMaker(x, y);
+
 		//JLabel test = new JLabel();
 		//String text = String.format("[%d, %d]", y, x);
-		grid[x][y] = new JButton(/*text*/);
-		grid[x][y].add(image);
+		
+		//grid[x][y] = new JButton(/*text*/);
+		/*grid[x][y].add(image);
 		grid[x][y].setContentAreaFilled(false);
 		grid[x][y].setPreferredSize(new Dimension(125,125));
 		grid[x][y].addActionListener(new PlantEdit());
 		grid[x][y].putClientProperty("column", x);
 		grid[x][y].putClientProperty("row", y);
-		play.add(grid[x][y]);
+		play.add(grid[x][y];*/
 		/*
-		if (counterX < 8){
-		    counterX++;
-		} else {
-		    counterX = 0;
+		  if (counterX < 8){
+		counterX++;
+		    } else {
+		counterX = 0;
 		    counterY++;
-		}
+		    }
 		*/
 	    }
 	}
 	gameBoard.add(play);
+    }
+
+    public void buttonMaker(int x, int y) {
+	grid[x][y] = new JButton(String.format("[%d,%d]", y, x));
+	//grid[x][y].add(image);                                                                                          
+	//grid[x][y].setContentAreaFilled(false);                                                                         
+	grid[x][y].setPreferredSize(new Dimension(125,125));
+	grid[x][y].addActionListener(new PlantEdit());
+	grid[x][y].putClientProperty("column", x);
+	grid[x][y].putClientProperty("row", y);
+	play.add(grid[x][y]);
     }
     
     public static void wait(int n) {
@@ -272,7 +292,7 @@ public class Gui1 extends JFrame{
     */
 
     public void addZombie(){
-	Jlabel image2 = new Jlabel();
+	JLabel image2 = new JLabel();
 	image2.setIcon(new ImageIcon("Zombie1.png"));
 	grid[8][random.nextInt(5)].add(image2);
 	gameBoard.revalidate();               

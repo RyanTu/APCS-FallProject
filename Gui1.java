@@ -183,7 +183,10 @@ public class Gui1 extends JFrame{
                 counterChange();
             }
 	    if (r.isSelected()){
-		grid[btn.getClientProperty("column")][btn.getClientProperty("row")].add( = new JButton;
+		//play.remove(btn);
+		buttonMaker((Integer) btn.getClientProperty("column"), (Integer) btn.getClientProperty("row"));
+		play.remove(btn);
+		//grid[btn.getClientProperty("column")][btn.getClientProperty("row")] = new JButton;
 		
 		//image.setIcon(null);
 		//btn.add(image);
@@ -192,7 +195,7 @@ public class Gui1 extends JFrame{
 	    
 	    JButton btn1 = (JButton) e.getSource();
 	    System.out.println("clicked column " + btn1.getClientProperty("column") + ", row " + btn1.getClientProperty("row"));
-	    btn1.putClientProperty("column", (int)btn1.getClientProperty("column")+1);
+	    //btn1.putClientProperty("column", (int)btn1.getClientProperty("column")+1);
 	    System.out.println(btn1.getClientProperty("column"));
 	    btn1.validate();
 	    overall.repaint();
@@ -239,27 +242,41 @@ public class Gui1 extends JFrame{
 	int counterY = 0;
 	for (int y = 0; y < 5; y++){
 	    for (int x = 0; x < 9; x++){
+		buttonMaker(x, y);
+
 		//JLabel test = new JLabel();
 		//String text = String.format("[%d, %d]", y, x);
-		grid[x][y] = new JButton(/*text*/);
-		//grid[x][y].add(image);
-		//grid[x][y].setContentAreaFilled(false);
+		
+		//grid[x][y] = new JButton(/*text*/);
+		/*grid[x][y].add(image);
+		grid[x][y].setContentAreaFilled(false);
 		grid[x][y].setPreferredSize(new Dimension(125,125));
 		grid[x][y].addActionListener(new PlantEdit());
 		grid[x][y].putClientProperty("column", x);
 		grid[x][y].putClientProperty("row", y);
-		play.add(grid[x][y]);
+		play.add(grid[x][y];*/
 		/*
-		if (counterX < 8){
-		    counterX++;
-		} else {
-		    counterX = 0;
+		  if (counterX < 8){
+		counterX++;
+		    } else {
+		counterX = 0;
 		    counterY++;
-		}
+		    }
 		*/
 	    }
 	}
 	gameBoard.add(play);
+    }
+
+    public void buttonMaker(int x, int y) {
+	grid[x][y] = new JButton(String.format("[%d,%d]", y, x));
+	//grid[x][y].add(image);                                                                                          
+	//grid[x][y].setContentAreaFilled(false);                                                                         
+	grid[x][y].setPreferredSize(new Dimension(125,125));
+	grid[x][y].addActionListener(new PlantEdit());
+	grid[x][y].putClientProperty("column", x);
+	grid[x][y].putClientProperty("row", y);
+	play.add(grid[x][y]);
     }
     
     public static void wait(int n) {
