@@ -20,5 +20,5 @@ Changes
 1/18: Able to add images to jbuttons (RT) <br>
 1/19: Tried to add a reset function (Class) <br>
 1/20: Grid now resets when button is pressed (Class) <br>
-1/21: Added client properties to buttons and tried adding timers (Class), attempted to add zombies (YR)
-1/22: Fixed adding zombies (RT)
+1/21: Added client properties to buttons and tried adding timers (Class), attempted to add zombies (YR) <br>
+1/22: Fixed adding zombies and added a remove funcion (RT)
