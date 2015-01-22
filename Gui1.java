@@ -21,7 +21,7 @@ public class Gui1 extends JFrame{
     /* top holds JLabel counter and ButtonGroup selection, 
        play is where JButton[][] grid is */
 
-    private JLabel counter,image; 
+    private JLabel counter; 
     private ButtonGroup selection;
     private JRadioButton A,B,C,D,r;
 
@@ -145,6 +145,7 @@ public class Gui1 extends JFrame{
     private class PlantEdit implements ActionListener{
 	public void actionPerformed(ActionEvent e){
 	    JButton btn = (JButton) e.getSource();
+	    JLabel image = new JLabel();
 	    if (A.isSelected() && getSunCount()>=50){
 		image.setIcon(new ImageIcon("Sunflower.png"));
 		btn.add(image);
@@ -182,8 +183,10 @@ public class Gui1 extends JFrame{
                 counterChange();
             }
 	    if (r.isSelected()){
-		image.setIcon(null);
-		btn.add(image);
+		grid[btn.getClientProperty("column")][btn.getClientProperty("row")].add( = new JButton;
+		
+		//image.setIcon(null);
+		//btn.add(image);
 		gameBoard.revalidate();
 	    }
 	    
@@ -231,7 +234,7 @@ public class Gui1 extends JFrame{
     public void gridMaker() {	
 	play = new JPanel(new GridLayout(5,9)); 
 	grid = new JButton[9][5];
-        image = new JLabel();
+	//image = new JLabel();
 	int counterX = 0;
 	int counterY = 0;
 	for (int y = 0; y < 5; y++){
@@ -239,8 +242,8 @@ public class Gui1 extends JFrame{
 		//JLabel test = new JLabel();
 		//String text = String.format("[%d, %d]", y, x);
 		grid[x][y] = new JButton(/*text*/);
-		grid[x][y].add(image);
-		grid[x][y].setContentAreaFilled(false);
+		//grid[x][y].add(image);
+		//grid[x][y].setContentAreaFilled(false);
 		grid[x][y].setPreferredSize(new Dimension(125,125));
 		grid[x][y].addActionListener(new PlantEdit());
 		grid[x][y].putClientProperty("column", x);
