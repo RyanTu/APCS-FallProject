@@ -112,7 +112,7 @@ public class Gui1 extends JFrame{
 	*/
 
 
-	timer.scheduleAtFixedRate(new Move(), 0, 500);
+	timer.scheduleAtFixedRate(new Move(), 100, 2000);
 
 	overall.pack();
 	overall.setVisible(true);
@@ -152,20 +152,24 @@ public class Gui1 extends JFrame{
 	    JButton btn = (JButton) e.getSource();
 	    //	    JLabel image = new JLabel();
 	    if (A.isSelected() && getSunCount()>=50){
-		JLabel label = new JLabel();
-		label.setIcon(new ImageIcon("Sunflower.png"));
-		btn.add(label);
-		gameBoard.revalidate();
-		//overall.repaint();
-		setSunCount(getSunCount()-50);
-		counterChange();
-		setSf(getSf()+1);
-		btn.putClientProperty("sunflower", 1);
+		//if ((Integer) btn.getClientProperty("plant") != 0) {
+		    JLabel label = new JLabel();
+		    label.setIcon(new ImageIcon("Sunflower.png"));
+		    btn.add(label);
+		    gameBoard.revalidate();
+		    //overall.repaint();
+		    setSunCount(getSunCount()-50);
+		    counterChange();
+		    setSf(getSf()+1);
+		    //btn.putClientProperty("sunflower", 1);
+		    btn.putClientProperty("plant", 1);//1=sunflower	    
+		    //}
 	    }
 
 	    if (B.isSelected() && getSunCount()>=100){
-		image.setIcon(new ImageIcon("ShooterOne.png"));
-		btn.add(image);
+		JLabel label1 = new JLabel();
+		label1.setIcon(new ImageIcon("ShooterOne.png"));
+		btn.add(label1);
 		gameBoard.revalidate();
 		//overall.repaint();
 		setSunCount(getSunCount()-100);
@@ -174,8 +178,9 @@ public class Gui1 extends JFrame{
 	    }
 
 	    if (C.isSelected() && getSunCount()>=125){
-                image.setIcon(new ImageIcon("Chomper.png"));
-                btn.add(image);
+		JLabel label2 = new JLabel();
+                label2.setIcon(new ImageIcon("Chomper.png"));
+                btn.add(label2);
                 gameBoard.revalidate();
                 //overall.repaint();                                                             
                 setSunCount(getSunCount()-125);
@@ -184,8 +189,9 @@ public class Gui1 extends JFrame{
             }
 	    
 	    if (D.isSelected() && getSunCount()>=200){
-                image.setIcon(new ImageIcon("GatlingPea.png"));
-                btn.add(image);
+                JLabel label3 = new JLabel();
+		label3.setIcon(new ImageIcon("GatlingPea.png"));
+                btn.add(label3);
                 gameBoard.revalidate();
                 //overall.repaint();                                                             
                 setSunCount(getSunCount()-200);
@@ -216,7 +222,7 @@ public class Gui1 extends JFrame{
 	public void actionPerformed(ActionEvent e){
 	    if (isStarted == false) {
 		isStarted = true;           
-		setSunCount(75);
+		setSunCount(10000);
 		counterChange();
 		
 		addZombie(8, random.nextInt(5), 10);
@@ -288,6 +294,8 @@ public class Gui1 extends JFrame{
 	grid[x][y].addActionListener(new PlantEdit());
 	grid[x][y].putClientProperty("column", x);
 	grid[x][y].putClientProperty("row", y);
+	grid[x][y].putClientProperty("zombie", 0);
+	grid[x][y].putClientProperty("zombieHealth",-1);
 	play.add(grid[x][y]);
     }
     
@@ -320,15 +328,17 @@ public class Gui1 extends JFrame{
 	for (int y = 0; y<5; y++){
 	    for (int x = 0; x<9; x++){
 		if((Integer) grid[x][y].getClientProperty("zombie")==1){
-		    addZombie((x-1), y, (Integer) (grid[x][y].getClientProperty("health")));
+		    System.out.println(x+" "+y);
+		    addZombie(y, x-1, (Integer) (grid[x][y].getClientProperty("health")));
 		    //grid[x-1][y].ad
 		    //grid[x-1][y].putClientProperty("zombie", 1);
 		    grid[x][y].removeAll();
 		    grid[x][y].putClientProperty("zombie", 0);
 		    grid[x][y].putClientProperty("zombieHealth", 0);
-		}
+		} else System.out.println("clear");
 	    }	
 	}
+	//revalidate
     }
     
 
