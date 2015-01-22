@@ -7,7 +7,9 @@ import javax.swing.table.*;
 import java.awt.event.*;
 import java.awt.image.*;
 import javax.imageio.*;
-import javax.swing.Timer;
+import java.awt.Toolkit;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Gui1 extends JFrame{
     
@@ -35,7 +37,7 @@ public class Gui1 extends JFrame{
     private Random random = new Random();   
     private boolean isStarted;
 
-    public Timer timer;// = new Timer();
+    public Timer timer = new Timer();
     public int speed = 1000;
 
     public Gui1() {
@@ -108,6 +110,9 @@ public class Gui1 extends JFrame{
 	    });
 	
 	*/
+
+
+	timer.scheduleAtFixedRate(new Move(), 0, 500);
 
 	overall.pack();
 	overall.setVisible(true);
@@ -215,6 +220,7 @@ public class Gui1 extends JFrame{
 		counterChange();
 		
 		addZombie(8, random.nextInt(5), 10);
+		//zombieMove();
 	    }
 	    /*   
 	    t.scheduleAtFixedRate(new TimerTask() {
@@ -291,11 +297,13 @@ public class Gui1 extends JFrame{
 	} catch (Exception e) {}
     }
     
-    /*
-    timer = new timer(speed, this);
-    timer.setInitialDelay(pause);
-    timer.start();
-    */
+
+    
+    private class Move extends TimerTask{
+	public void run(){
+	    zombieMove();
+	}
+    }
 
     public void addZombie(int column, int row, int health){
 	JLabel image2 = new JLabel();
@@ -304,15 +312,15 @@ public class Gui1 extends JFrame{
 	grid[column][row].add(image2);
 	gameBoard.revalidate();               
 	grid[column][row].putClientProperty("zombie", 1);
-	grid[x][y].putClientProperty("zombieHealth", health);
+	grid[column][row].putClientProperty("zombieHealth", health);
     }
 
     
     public void zombieMove(){
 	for (int y = 0; y<5; y++){
 	    for (int x = 0; x<9; x++){
-		if(grid[x][y].getClientProperty("zombie")==1){
-		    addZombie((x-1), y, grid[x][y].getClientProperty("health"));
+		if((Integer) grid[x][y].getClientProperty("zombie")==1){
+		    addZombie((x-1), y, (Integer) (grid[x][y].getClientProperty("health")));
 		    //grid[x-1][y].ad
 		    //grid[x-1][y].putClientProperty("zombie", 1);
 		    grid[x][y].removeAll();
