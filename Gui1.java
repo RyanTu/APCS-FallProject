@@ -21,9 +21,9 @@ public class Gui1 extends JFrame{
     /* top holds JLabel counter and ButtonGroup selection, 
        play is where JButton[][] grid is */
 
-    private JLabel counter; 
+    private JLabel counter,image; 
     private ButtonGroup selection;
-    private JRadioButton A,B,C,D;
+    private JRadioButton A,B,C,D,r;
 
     private JButton[][] grid;
 
@@ -34,7 +34,9 @@ public class Gui1 extends JFrame{
 
     private Random random = new Random();   
     private boolean isStarted;
-    //public Timer t = new Timer();
+
+    public Timer timer;// = new Timer();
+    public int speed = 1000;
 
     public Gui1() {
 
@@ -60,15 +62,19 @@ public class Gui1 extends JFrame{
 
         D = new JRadioButton("Gatling Pea Shooter (200 suns)");
 
+	r = new JRadioButton("Remove Plant");
+
 	selection = new ButtonGroup();
 	selection.add(A);
 	selection.add(B);
 	selection.add(C);
         selection.add(D);
+	selection.add(r);
 	top.add(A);
 	top.add(B);
 	top.add(C);
 	top.add(D);
+	top.add(r);
 
 	gameBoard = new JPanel();
 	overall.add(gameBoard, BorderLayout.CENTER);
@@ -127,12 +133,19 @@ public class Gui1 extends JFrame{
     public void setSf(int sunflowerNumber){
 	this.sunflowerNumber = sunflowerNumber;
     }
+
+    public void getImage(){
+
+    }
+
+    public void setImage(){
+
+    }
 	
-    private class PlantAdd implements ActionListener{
+    private class PlantEdit implements ActionListener{
 	public void actionPerformed(ActionEvent e){
 	    JButton btn = (JButton) e.getSource();
 	    if (A.isSelected() && getSunCount()>=50){
-		JLabel image = new JLabel();
 		image.setIcon(new ImageIcon("Sunflower.png"));
 		btn.add(image);
 		gameBoard.revalidate();
@@ -143,7 +156,6 @@ public class Gui1 extends JFrame{
 	    }
 
 	    if (B.isSelected() && getSunCount()>=100){
-		JLabel image = new JLabel();
 		image.setIcon(new ImageIcon("ShooterOne.png"));
 		btn.add(image);
 		gameBoard.revalidate();
@@ -153,7 +165,6 @@ public class Gui1 extends JFrame{
 	    }
 
 	    if (C.isSelected() && getSunCount()>=125){
-                JLabel image = new JLabel();
                 image.setIcon(new ImageIcon("Chomper.png"));
                 btn.add(image);
                 gameBoard.revalidate();
@@ -163,7 +174,6 @@ public class Gui1 extends JFrame{
             }
 	    
 	    if (D.isSelected() && getSunCount()>=200){
-                JLabel image = new JLabel();
                 image.setIcon(new ImageIcon("GatlingPea.png"));
                 btn.add(image);
                 gameBoard.revalidate();
@@ -171,7 +181,11 @@ public class Gui1 extends JFrame{
                 setSunCount(getSunCount()-200);
                 counterChange();
             }
-	   
+	    if (r.isSelected()){
+		image.setIcon(null);
+		btn.add(image);
+		gameBoard.revalidate();
+	    }
 	    
 	    JButton btn1 = (JButton) e.getSource();
 	    System.out.println("clicked column " + btn1.getClientProperty("column") + ", row " + btn1.getClientProperty("row"));
@@ -217,6 +231,7 @@ public class Gui1 extends JFrame{
     public void gridMaker() {	
 	play = new JPanel(new GridLayout(5,9)); 
 	grid = new JButton[9][5];
+        image = new JLabel();
 	int counterX = 0;
 	int counterY = 0;
 	for (int y = 0; y < 5; y++){
@@ -224,9 +239,10 @@ public class Gui1 extends JFrame{
 		//JLabel test = new JLabel();
 		//String text = String.format("[%d, %d]", y, x);
 		grid[x][y] = new JButton(/*text*/);
+		grid[x][y].add(image);
 		grid[x][y].setContentAreaFilled(false);
 		grid[x][y].setPreferredSize(new Dimension(125,125));
-		grid[x][y].addActionListener(new PlantAdd());
+		grid[x][y].addActionListener(new PlantEdit());
 		grid[x][y].putClientProperty("column", x);
 		grid[x][y].putClientProperty("row", y);
 		play.add(grid[x][y]);
@@ -256,20 +272,26 @@ public class Gui1 extends JFrame{
     */
 
     public void addZombie(){
-
-	    JLabel image = new JLabel();
-	    image.setIcon(new ImageIcon("Zombie1.png"));
-	    grid[8][random.nextInt(5)].add(image);
-	    gameBoard.revalidate();               
-	                             
+	image.setIcon(new ImageIcon("Zombie1.png"));
+	grid[8][random.nextInt(5)].add(image);
+	gameBoard.revalidate();               
     }
+
+    /*
+    public void move(){
+	for (int y = 0; y<4; y++){
+	    for (int x = 0; x<9; x++){
+		grid[x][y+1] = grid[x][y];
+		grid[x][y] = new JButton();
+	    }
+	}
+    }
+    */
 
     public void populate() {
 	ImageIcon ShooterOne = new ImageIcon("ShooterOne.png");
 	//play1.getValueAt(0,0) = new JButton("plant");
 	//play1.setIcon(ShooterOne);
-
-
     }
     
 
