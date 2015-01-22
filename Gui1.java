@@ -21,7 +21,7 @@ public class Gui1 extends JFrame{
     /* top holds JLabel counter and ButtonGroup selection, 
        play is where JButton[][] grid is */
 
-    private JLabel counter; 
+    private JLabel counter, image; 
     private ButtonGroup selection;
     private JRadioButton A,B,C,D,r;
 
@@ -145,10 +145,11 @@ public class Gui1 extends JFrame{
     private class PlantEdit implements ActionListener{
 	public void actionPerformed(ActionEvent e){
 	    JButton btn = (JButton) e.getSource();
-	    JLabel image = new JLabel();
+	    //	    JLabel image = new JLabel();
 	    if (A.isSelected() && getSunCount()>=50){
-		image.setIcon(new ImageIcon("Sunflower.png"));
-		btn.add(image);
+		JLabel label = new JLabel();
+		label.setIcon(new ImageIcon("Sunflower.png"));
+		btn.add(label);
 		gameBoard.revalidate();
 		//overall.repaint();
 		setSunCount(getSunCount()-50);
@@ -184,12 +185,12 @@ public class Gui1 extends JFrame{
             }
 	    if (r.isSelected()){
 		//play.remove(btn);
-		buttonMaker((Integer) btn.getClientProperty("column"), (Integer) btn.getClientProperty("row"));
-		play.remove(btn);
+		//buttonMaker((Integer) btn.getClientProperty("column"), (Integer) btn.getClientProperty("row"));
+		//play.remove(btn);
 		//grid[btn.getClientProperty("column")][btn.getClientProperty("row")] = new JButton;
 		
 		//image.setIcon(null);
-		//btn.add(image);
+		btn.removeAll();
 		gameBoard.revalidate();
 	    }
 	    
@@ -204,12 +205,13 @@ public class Gui1 extends JFrame{
 
     private class Begin implements ActionListener{
 	public void actionPerformed(ActionEvent e){
-	    isStarted = true;           
-	    setSunCount(75);
-	    counterChange();
+	    if (isStarted == false) {
+		isStarted = true;           
+		setSunCount(75);
+		counterChange();
 		
-	    addZombie();
-	     
+		addZombie();
+	    }
 	    /*   
 	    t.scheduleAtFixedRate(new TimerTask() {
 		    public void run() {
@@ -237,7 +239,7 @@ public class Gui1 extends JFrame{
     public void gridMaker() {	
 	play = new JPanel(new GridLayout(5,9)); 
 	grid = new JButton[9][5];
-	//image = new JLabel();
+	image = new JLabel();
 	int counterX = 0;
 	int counterY = 0;
 	for (int y = 0; y < 5; y++){
@@ -270,7 +272,7 @@ public class Gui1 extends JFrame{
 
     public void buttonMaker(int x, int y) {
 	grid[x][y] = new JButton(String.format("[%d,%d]", y, x));
-	//grid[x][y].add(image);                                                                                          
+	grid[x][y].add(image);                                                                                          
 	//grid[x][y].setContentAreaFilled(false);                                                                         
 	grid[x][y].setPreferredSize(new Dimension(125,125));
 	grid[x][y].addActionListener(new PlantEdit());
@@ -298,8 +300,8 @@ public class Gui1 extends JFrame{
 	gameBoard.revalidate();               
     }
 
-    /*
-    public void move(){
+    
+    public void zombieMove(){
 	for (int y = 0; y<4; y++){
 	    for (int x = 0; x<9; x++){
 		grid[x][y+1] = grid[x][y];
@@ -307,7 +309,7 @@ public class Gui1 extends JFrame{
 	    }
 	}
     }
-    */
+    
 
     public void populate() {
 	ImageIcon ShooterOne = new ImageIcon("ShooterOne.png");
