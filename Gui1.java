@@ -409,7 +409,10 @@ public class Gui1 extends JFrame{
 	public Image getImage() {
 	    return image;
 	}
-
+	public boolean isVisible() {
+	    return visible;
+	}
+	
     }
     //ClassLoader cl = this.getClass().getClassLoader();
 
