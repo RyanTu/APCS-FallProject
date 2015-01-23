@@ -112,7 +112,7 @@ public class Gui1 extends JFrame{
 	*/
 
 
-	timer.scheduleAtFixedRate(new Move(), 100, 2000);
+	timer.scheduleAtFixedRate(new Move(), 4000, 4000);
 
 	overall.pack();
 	overall.setVisible(true);
@@ -313,11 +313,15 @@ public class Gui1 extends JFrame{
 	}
     }
 
+    //ClassLoader cl = this.getClass().getClassLoader();
+
     public void addZombie(int column, int row, int health){
 	JLabel image2 = new JLabel();
-	//int roww = random.nextInt(5);
 	image2.setIcon(new ImageIcon("Zombie1.png"));
 	grid[column][row].add(image2);
+	//Image img = ImageIO.read(getClass().getResource("Zombie.png"));
+	//ImageIcon img = new ImageIcon(getClass().getResource("Zombie.png"));
+	//grid[column][row].setIcon(img);
 	gameBoard.revalidate();               
 	grid[column][row].putClientProperty("zombie", 1);
 	grid[column][row].putClientProperty("zombieHealth", health);
@@ -327,14 +331,14 @@ public class Gui1 extends JFrame{
     public void zombieMove(){
 	for (int y = 0; y<5; y++){
 	    for (int x = 0; x<9; x++){
-		if((Integer) grid[x][y].getClientProperty("zombie")==1){
+		if((Integer) grid[x][y].getClientProperty("zombie")==1 && x-1 >= 0){
 		    System.out.println(x+" "+y);
-		    addZombie(y, x-1, (Integer) (grid[x][y].getClientProperty("health")));
-		    //grid[x-1][y].ad
-		    //grid[x-1][y].putClientProperty("zombie", 1);
-		    grid[x][y].removeAll();
+		    addZombie(x-1, y, (Integer) grid[x][y].getClientProperty("zombieHealth"));
+		   
+		    grid[x][y].setIcon(null);
 		    grid[x][y].putClientProperty("zombie", 0);
 		    grid[x][y].putClientProperty("zombieHealth", 0);
+		    //gameBoard.revalidate();
 		} else System.out.println("clear");
 	    }	
 	}
