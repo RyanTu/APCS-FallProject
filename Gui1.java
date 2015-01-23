@@ -79,7 +79,7 @@ public class Gui1 extends JFrame{
 	counter = new JLabel("Counter", JLabel.CENTER);
 	top.add(counter);
 
-        A = new JRadioButton("Sunflower (25 suns)");
+        A = new JRadioButton("Sunflower (50 suns)");
 	A.setSelected(true);
 	
         B = new JRadioButton("Pea Shooter (100 suns)");
