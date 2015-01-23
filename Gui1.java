@@ -117,7 +117,7 @@ public class Gui1 extends JFrame{
 
 
 	status = new JLabel(statusChange(), JLabel.CENTER);
-	overall.add(status, BorderLayout.PAGE_END);
+	overall.add(status, BorderLayout.EAST);
 
 	timer.scheduleAtFixedRate(new Move(), 4000, 4000);
 
@@ -154,6 +154,7 @@ public class Gui1 extends JFrame{
 
     }
 
+    //number of zombies left to kill
     public int getTarget() {
 	return target;
     }
@@ -175,8 +176,10 @@ public class Gui1 extends JFrame{
     private class PlantEdit implements ActionListener{
 	public void actionPerformed(ActionEvent e){
 	    JButton btn = (JButton) e.getSource();
+	    Object plantHere = btn.getClientProperty("plant");
+	    Object zombieHere = btn.getClientProperty("zombie");
 	    //	    JLabel image = new JLabel();
-	    if (A.isSelected() && getSunCount()>=50 && (Integer) btn.getClientProperty("plant") == 0){
+	    if (A.isSelected() && getSunCount()>=50 && (Integer) plantHere == 0 && (Integer) zombieHere == 0){
 		//if ((Integer) btn.getClientProperty("plant") != 0) {
 		    JLabel label = new JLabel();
 		    label.setIcon(new ImageIcon("Sunflower.png"));
@@ -191,7 +194,7 @@ public class Gui1 extends JFrame{
 		    //}
 	    }
 
-	    if (B.isSelected() && getSunCount()>=100 && (Integer) btn.getClientProperty("plant") != 0){
+	    if (B.isSelected() && getSunCount()>=100 && (Integer) plantHere == 0 && (Integer) zombieHere == 0){
 		JLabel label1 = new JLabel();
 		label1.setIcon(new ImageIcon("ShooterOne.png"));
 		btn.add(label1);
@@ -202,7 +205,7 @@ public class Gui1 extends JFrame{
 		btn.putClientProperty("plant", 2);
 	    }
 
-	    if (C.isSelected() && getSunCount()>=125 && (Integer) btn.getClientProperty("plant") != 0){
+	    if (C.isSelected() && getSunCount()>=125 && (Integer) plantHere == 0 && (Integer) zombieHere == 0){
 		JLabel label2 = new JLabel();
                 label2.setIcon(new ImageIcon("Chomper.png"));
                 btn.add(label2);
@@ -213,7 +216,7 @@ public class Gui1 extends JFrame{
                 btn.putClientProperty("plant", 3);
             }
 	    
-	    if (D.isSelected() && getSunCount()>=200 && (Integer) btn.getClientProperty("plant") != 0){
+	    if (D.isSelected() && getSunCount()>=200 && (Integer) plantHere == 0 && (Integer) zombieHere == 0){
                 JLabel label3 = new JLabel();
 		label3.setIcon(new ImageIcon("GatlingPea.png"));
                 btn.add(label3);
@@ -322,6 +325,7 @@ public class Gui1 extends JFrame{
 	grid[x][y].putClientProperty("zombie", 0);
 	grid[x][y].putClientProperty("zombieHealth",-1);
 	grid[x][y].putClientProperty("plant", 0);
+	grid[x][y].putClientProperty("plantHealth", -1);
 	play.add(grid[x][y]);
     }
     
@@ -336,6 +340,7 @@ public class Gui1 extends JFrame{
     private class Move extends TimerTask{
 	public void run(){
 	    zombieMove();
+	    statusChange();
 	}
     }
 
@@ -359,20 +364,41 @@ public class Gui1 extends JFrame{
 	    for (int x = 0; x<9; x++){
 		if((Integer) grid[x][y].getClientProperty("zombie")==1 && x-1 >= 0){
 		    System.out.println(x+" "+y);
-		    addZombie(x-1, y, (Integer) grid[x][y].getClientProperty("zombieHealth"));
-		   
-		    grid[x][y].setIcon(null);
-		    grid[x][y].putClientProperty("zombie", 0);
-		    grid[x][y].putClientProperty("zombieHealth", 0);
-		    //gameBoard.revalidate();
-		} else if((Integer) grid[x][y].getClientProperty("zombie")==1 && x-1 < 0) {
+		    if ((Integer) grid[x-1][y].getClientProperty("plant") > 0) {
+			grid[x-1][y].removeAll();
+			grid[x-1][y].putClientProperty("plant", 0);
+			grid[x-1][y].putClientProperty("plantHealth",0);
+		    } else {
+			addZombie(x-1, y, (Integer) grid[x][y].getClientProperty("zombieHealth"));
+			grid[x][y].removeAll();
+			//grid[x][y].setIcon(null);
+			grid[x][y].putClientProperty("zombie", 0);
+			grid[x][y].putClientProperty("zombieHealth", 0);
+			//gameBoard.revalidate();
+		    }
+		} if((Integer) grid[x][y].getClientProperty("zombie")==1 && x-1 < 0) {
 		    youLose = true;
 		} else System.out.println("clear");
 	    }	
 	}
+	gameBoard.revalidate();
+	overall.repaint();
 	//revalidate
     }
     
+    //don't know if needed??
+    public boolean toDie(JButton button) {
+	boolean die = false;
+	if ((Integer) button.getClientProperty("zombieHealth") == 0) {
+	    die = true;
+	} else if ((Integer) button.getClientProperty("plantHealth") == 0) {
+	    die = true;
+	}/* else if ((Integer) button.getClientProperty("")) {
+
+}*/
+	return die;
+    }
+
 
     public void populate() {
 	ImageIcon ShooterOne = new ImageIcon("ShooterOne.png");
