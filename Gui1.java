@@ -171,14 +171,29 @@ public class Gui1 extends JFrame{
 
     //number of zombies left to kill
     public int getTarget() {
+	/**
+	   Obtains the number of "zombies" that need to be killed before winning
+	   the game.
+	   @return the number of "zombies" that need to be defeated
+	*/
 	return target;
     }
 
     public void setTarget(int n) {
 	this.target = n;
+	/**
+	   Applies changes towards the number of "zombies" that still need to 
+	   be defeated.
+	   @param n  the number that the variable "target" is meant to become
+	*/
     }
 
     public void statusChange() {
+	/**
+	   Edits the label which states the game's current position (whether or
+	   not the player has won or lost and how many zombies still need to be
+	   played)
+	*/
 	if (youLose == true) {
 	    statusLabel = "Status: You lose";
 	} else if (getTarget() == 0) {
@@ -190,6 +205,12 @@ public class Gui1 extends JFrame{
     }
 	
     private class PlantEdit implements ActionListener{
+	/**
+	   Contains an action listener which will determine which radio 
+	   buttons have been selected and perform that action on the grid. This
+	   is the planting mechanism and removing mechanism for the plants in 
+	   this game.
+	*/
 	public void actionPerformed(ActionEvent e){
 	    JButton btn = (JButton) e.getSource();
 	    Object plantHere = btn.getClientProperty("plant");
@@ -255,6 +276,10 @@ public class Gui1 extends JFrame{
     }
 
     private class Begin implements ActionListener{
+	/**
+	   Contains an action listener that corresponds with the "Start" 
+	   button. This is responsible for starting the game up.
+	*/
 	public void actionPerformed(ActionEvent e){
 	    if (isStarted == false && isEnded == true) {
 		isStarted = true;     
@@ -269,6 +294,11 @@ public class Gui1 extends JFrame{
     }
 
     private class End implements ActionListener{
+	/** 
+	    Contains an action listener which corresponds with the "Reset" 
+	    button.This contains the method used to restart all progress in 
+	    the game and to end the game.
+	*/
 	public void actionPerformed(ActionEvent e){
 	    if (isEnded == false && isStarted == true) {
 		setSunCount(0);
@@ -286,6 +316,12 @@ public class Gui1 extends JFrame{
     }
     
     public void gridMaker() {	
+	/**
+	   Initializes the layout and 2D button array utilized in making the 
+	   grid.Also feeds variables to signify coordinates into the method 
+	   buttonMaker.
+	*/
+
 	play = new JPanel(new GridLayout(5,9)); 
 	grid = new JButton[9][5];
 	image = new JLabel();
@@ -294,32 +330,19 @@ public class Gui1 extends JFrame{
 	for (int y = 0; y < 5; y++){
 	    for (int x = 0; x < 9; x++){
 		buttonMaker(x, y);
-
-		//JLabel test = new JLabel();
-		//String text = String.format("[%d, %d]", y, x);
-		
-		//grid[x][y] = new JButton(/*text*/);
-		/*grid[x][y].add(image);
-		grid[x][y].setContentAreaFilled(false);
-		grid[x][y].setPreferredSize(new Dimension(125,125));
-		grid[x][y].addActionListener(new PlantEdit());
-		grid[x][y].putClientProperty("column", x);
-		grid[x][y].putClientProperty("row", y);
-		play.add(grid[x][y];*/
-		/*
-		  if (counterX < 8){
-		counterX++;
-		    } else {
-		counterX = 0;
-		    counterY++;
-		    }
-		*/
 	    }
 	}
 	gameBoard.add(play);
     }
 
     public void buttonMaker(int x, int y) {
+	/** 
+	    Uses the variables received from various methods to create the 
+	    buttons in the grid and to provide them with some client 
+	    properties.
+	    @param x  the column to place the button in
+	    @param y  the row to place the button in
+	*/
 	grid[x][y] = new JButton(String.format("[%d,%d]", y, x));
 	grid[x][y].add(image);                                                                                                           grid[x][y].setPreferredSize(new Dimension(125,125));
 	grid[x][y].addActionListener(new PlantEdit());
@@ -341,6 +364,10 @@ public class Gui1 extends JFrame{
 
     
     private class Move extends TimerTask{
+	/**
+	   Creates movement of images from one button to the next.
+	*/
+
 	public void run(){
 	    //statusChange();
 	    zombieMove();
@@ -392,6 +419,13 @@ public class Gui1 extends JFrame{
     //ClassLoader cl = this.getClass().getClassLoader();
 
     public void addZombie(int column, int row, int health){
+	/**
+	   Adds "zombies" into the game field from the right.
+	   @param column  the column to place the "zombie" in
+	   @param row  the row to place the "zombie" in
+	   @param health  the amount of endurance the "zombie" should have and 
+	   the number of hits the "zombie" can receive before disappearing
+	*/
 	JLabel image2 = new JLabel();
 	image2.setIcon(new ImageIcon("Zombie1.png"));
 	grid[column][row].add(image2);
@@ -405,6 +439,9 @@ public class Gui1 extends JFrame{
 
     
     public void zombieMove(){
+	/**
+	   Creates movement for zombies which is utilized in the Move class
+	*/
 	for (int y = 0; y<5; y++){
 	    for (int x = 0; x<9; x++){
 		if((Integer) grid[x][y].getClientProperty("zombie")==1 && x-1 >= 0){
