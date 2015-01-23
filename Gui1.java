@@ -34,6 +34,10 @@ public class Gui1 extends JFrame{
     public int sunCount = 0;
     public int sunflowerNumber = 0;
     public int target = 50;
+    public int zombieNum = 0;
+
+    public double sunMath = 0.0;
+    public double zombieMath = 0.0;
 
     public String statusLabel = "";
 
@@ -43,6 +47,8 @@ public class Gui1 extends JFrame{
 
     public Timer timer = new Timer();
     public int speed = 1000;
+
+
 
     public Gui1() {
 
@@ -119,7 +125,7 @@ public class Gui1 extends JFrame{
 	status = new JLabel(statusChange(), JLabel.CENTER);
 	overall.add(status, BorderLayout.EAST);
 
-	timer.scheduleAtFixedRate(new Move(), 4000, 4000);
+	timer.scheduleAtFixedRate(new Move(), 0, 5000);
 
 	overall.pack();
 	overall.setVisible(true);
@@ -339,11 +345,44 @@ public class Gui1 extends JFrame{
     
     private class Move extends TimerTask{
 	public void run(){
-	    zombieMove();
 	    statusChange();
+	    zombieMove();
+	    // statusChange();
+	    /*
+	    setSunCount(getSunCount() + 25);
+	    counterChange();
+	    sunMath += 0.5;
+	    */
+            zombieMath += 0.5;
+	    if (zombieNum <= 5 && zombieMath == 1) {
+		addZombie(8, random.nextInt(5), 10);
+		zombieMath = 0.0;
+	    }
+	    int sunflower = 0;
+	    for (int y = 0; y<5; y++){
+		for (int x = 0; x<9; x++){
+		    if ((Integer) grid[x][y].getClientProperty("plant") == 1) {
+			sunflower++;
+		    }
+		}
+	    }
+	    setSunCount(getSunCount() + ((sunflower/2)+1)*25);
+	    counterChange(); 
+	    /* 
+	    if (sunMath >= 1) {
+		setSunCount(getSunCount() + 25);
+		sunMath = 0;
+	    }
+	    */
+	    //sunMath += 0.2;
+	    //zombieMath += 0.5;
 	}
     }
 
+    /*
+    private class Projectile {
+	
+    }*/
     //ClassLoader cl = this.getClass().getClassLoader();
 
     public void addZombie(int column, int row, int health){
@@ -356,6 +395,7 @@ public class Gui1 extends JFrame{
 	gameBoard.revalidate();               
 	grid[column][row].putClientProperty("zombie", 1);
 	grid[column][row].putClientProperty("zombieHealth", health);
+	zombieNum += 1;
     }
 
     
@@ -368,6 +408,10 @@ public class Gui1 extends JFrame{
 			grid[x-1][y].removeAll();
 			grid[x-1][y].putClientProperty("plant", 0);
 			grid[x-1][y].putClientProperty("plantHealth",0);
+			addZombie(x-1, y, (Integer) grid[x][y].getClientProperty("zombieHealth"));
+                        grid[x][y].removeAll();                                                          
+                        grid[x][y].putClientProperty("zombie", 0);
+                        grid[x][y].putClientProperty("zombieHealth", 0);
 		    } else {
 			addZombie(x-1, y, (Integer) grid[x][y].getClientProperty("zombieHealth"));
 			grid[x][y].removeAll();
