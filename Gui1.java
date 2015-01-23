@@ -23,7 +23,7 @@ public class Gui1 extends JFrame{
     /* top holds JLabel counter and ButtonGroup selection, 
        play is where JButton[][] grid is */
 
-    private JLabel counter, image; 
+    private JLabel counter, image, status;
     private ButtonGroup selection;
     private JRadioButton A,B,C,D,r;
 
@@ -33,9 +33,13 @@ public class Gui1 extends JFrame{
 
     public int sunCount = 0;
     public int sunflowerNumber = 0;
+    public int target = 50;
+
+    public String statusLabel = "";
 
     private Random random = new Random();   
     private boolean isStarted;
+    private boolean youLose = false;
 
     public Timer timer = new Timer();
     public int speed = 1000;
@@ -112,6 +116,9 @@ public class Gui1 extends JFrame{
 	*/
 
 
+	status = new JLabel(statusChange(), JLabel.CENTER);
+	overall.add(status, BorderLayout.PAGE_END);
+
 	timer.scheduleAtFixedRate(new Move(), 4000, 4000);
 
 	overall.pack();
@@ -146,12 +153,30 @@ public class Gui1 extends JFrame{
     public void setImage(){
 
     }
+
+    public int getTarget() {
+	return target;
+    }
+
+    public void setTarget(int n) {
+	this.target = n;
+    }
+
+    public String statusChange() {
+	if (youLose == true) {
+	    return "Status: You lose";
+	} else if (getTarget() == 0) {
+	    return "Status: You win";
+	} else {
+	    return "Status: " + getTarget();
+	}
+    }
 	
     private class PlantEdit implements ActionListener{
 	public void actionPerformed(ActionEvent e){
 	    JButton btn = (JButton) e.getSource();
 	    //	    JLabel image = new JLabel();
-	    if (A.isSelected() && getSunCount()>=50){
+	    if (A.isSelected() && getSunCount()>=50 && (Integer) btn.getClientProperty("plant") == 0){
 		//if ((Integer) btn.getClientProperty("plant") != 0) {
 		    JLabel label = new JLabel();
 		    label.setIcon(new ImageIcon("Sunflower.png"));
@@ -166,7 +191,7 @@ public class Gui1 extends JFrame{
 		    //}
 	    }
 
-	    if (B.isSelected() && getSunCount()>=100){
+	    if (B.isSelected() && getSunCount()>=100 && (Integer) btn.getClientProperty("plant") != 0){
 		JLabel label1 = new JLabel();
 		label1.setIcon(new ImageIcon("ShooterOne.png"));
 		btn.add(label1);
@@ -174,10 +199,10 @@ public class Gui1 extends JFrame{
 		//overall.repaint();
 		setSunCount(getSunCount()-100);
 		counterChange();
-		btn.putClientProperty("peashooter", 1);
+		btn.putClientProperty("plant", 2);
 	    }
 
-	    if (C.isSelected() && getSunCount()>=125){
+	    if (C.isSelected() && getSunCount()>=125 && (Integer) btn.getClientProperty("plant") != 0){
 		JLabel label2 = new JLabel();
                 label2.setIcon(new ImageIcon("Chomper.png"));
                 btn.add(label2);
@@ -185,10 +210,10 @@ public class Gui1 extends JFrame{
                 //overall.repaint();                                                             
                 setSunCount(getSunCount()-125);
                 counterChange();
-                btn.putClientProperty("chomper", 1);
+                btn.putClientProperty("plant", 3);
             }
 	    
-	    if (D.isSelected() && getSunCount()>=200){
+	    if (D.isSelected() && getSunCount()>=200 && (Integer) btn.getClientProperty("plant") != 0){
                 JLabel label3 = new JLabel();
 		label3.setIcon(new ImageIcon("GatlingPea.png"));
                 btn.add(label3);
@@ -196,7 +221,7 @@ public class Gui1 extends JFrame{
                 //overall.repaint();                                                             
                 setSunCount(getSunCount()-200);
                 counterChange();
-		btn.putClientProperty("gatlingpea", 1);
+		btn.putClientProperty("plant", 4);
             }
 	    if (r.isSelected()){
 		//play.remove(btn);
@@ -296,6 +321,7 @@ public class Gui1 extends JFrame{
 	grid[x][y].putClientProperty("row", y);
 	grid[x][y].putClientProperty("zombie", 0);
 	grid[x][y].putClientProperty("zombieHealth",-1);
+	grid[x][y].putClientProperty("plant", 0);
 	play.add(grid[x][y]);
     }
     
@@ -339,6 +365,8 @@ public class Gui1 extends JFrame{
 		    grid[x][y].putClientProperty("zombie", 0);
 		    grid[x][y].putClientProperty("zombieHealth", 0);
 		    //gameBoard.revalidate();
+		} else if((Integer) grid[x][y].getClientProperty("zombie")==1 && x-1 < 0) {
+		    youLose = true;
 		} else System.out.println("clear");
 	    }	
 	}
