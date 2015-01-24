@@ -33,7 +33,7 @@ public class Gui1 extends JFrame{
     /* top holds JLabel counter and ButtonGroup selection, 
        play is where JButton[][] grid is */
 
-    private JLabel counter, image, status;
+    private JLabel counter, status;
     private ButtonGroup selection;
     private JRadioButton A,B,C,D,r;
 
@@ -52,7 +52,7 @@ public class Gui1 extends JFrame{
     public String statusLabel = "";
 
     private Random random = new Random();   
-    private boolean isStarted, isEnded;
+    private boolean isStarted = false, isEnded = true;
     private boolean youLose = false;
 
     public Timer timer = new Timer();
@@ -76,7 +76,7 @@ public class Gui1 extends JFrame{
 	top.setLayout(new GridLayout());
 	overall.add(top, BorderLayout.PAGE_START);
 
-	counter = new JLabel("Counter", JLabel.CENTER);
+	counter = new JLabel("Counter: 0", JLabel.CENTER);
 	top.add(counter);
 
         A = new JRadioButton("Sunflower (50 suns)");
@@ -118,12 +118,14 @@ public class Gui1 extends JFrame{
 	reset = new JButton("Reset");
 	reset.addActionListener(new End());
 	bottom.add(reset);
-
-	status = new JLabel("Status", JLabel.LEFT);
-	//status.setText(statusChange);
-	overall.add(status, BorderLayout.EAST);
-
-	timer.scheduleAtFixedRate(new Move(), 0, 1000);
+	
+	status = new JLabel("Status: 50 left", JLabel.CENTER);
+	bottom.add(status, BorderLayout.PAGE_END);
+	
+        timer.scheduleAtFixedRate(new Zombie(), 0, 2500);
+	timer.scheduleAtFixedRate(new ProjectileSet(), 0, 2000);
+	timer.scheduleAtFixedRate(new ProjectileMove(), 0, 1250);
+	timer.scheduleAtFixedRate(new SunUpdate(), 0, 1000);
 
 	overall.pack();
 	overall.setVisible(true);
@@ -196,10 +198,12 @@ public class Gui1 extends JFrame{
 	*/
 	if (youLose == true) {
 	    statusLabel = "Status: You lose";
+	    isStarted = false;
+	    isEnded = true;
 	} else if (getTarget() == 0) {
 	    statusLabel = "Status: You win";
 	} else {
-	    statusLabel = "Status: " + getTarget();
+	    statusLabel = "Status: " + getTarget() + " left";
 	}
 	status.setText(statusLabel);
     }
@@ -212,10 +216,11 @@ public class Gui1 extends JFrame{
 	   this game.
 	*/
 	public void actionPerformed(ActionEvent e){
-	    JButton btn = (JButton) e.getSource();
-	    Object plantHere = btn.getClientProperty("plant");
-	    Object zombieHere = btn.getClientProperty("zombie");
-	    if (A.isSelected() && getSunCount()>=50 && (Integer) plantHere == 0 && (Integer) zombieHere == 0){
+	    if (!youLose){
+		JButton btn = (JButton) e.getSource();
+		Object plantHere = btn.getClientProperty("plant");
+		Object zombieHere = btn.getClientProperty("zombie");
+		if (A.isSelected() && getSunCount()>=50 && (Integer) plantHere == 0 && (Integer) zombieHere == 0){
 		    JLabel label = new JLabel();
 		    label.setIcon(new ImageIcon("Sunflower.png"));
 		    btn.add(label);
@@ -225,53 +230,61 @@ public class Gui1 extends JFrame{
 		    counterChange();
 		    setSf(getSf()+1);
 		    btn.putClientProperty("plant", 1);
-	    }
-
-	    if (B.isSelected() && getSunCount()>=100 && (Integer) plantHere == 0 && (Integer) zombieHere == 0){
-		JLabel label1 = new JLabel();
-		label1.setIcon(new ImageIcon("ShooterOne.png"));
-		btn.add(label1);
-		gameBoard.revalidate();
-		overall.repaint();
-		setSunCount(getSunCount()-100);
-		counterChange();
-		btn.putClientProperty("plant", 2);
-	    }
-
-	    if (C.isSelected() && getSunCount()>=125 && (Integer) plantHere == 0 && (Integer) zombieHere == 0){
-		JLabel label2 = new JLabel();
-                label2.setIcon(new ImageIcon("Chomper.png"));
-                btn.add(label2);
-                gameBoard.revalidate();
-                //overall.repaint();                                                             
-                setSunCount(getSunCount()-125);
-                counterChange();
-                btn.putClientProperty("plant", 3);
-            }
-	    
-	    if (D.isSelected() && getSunCount()>=200 && (Integer) plantHere == 0 && (Integer) zombieHere == 0){
-                JLabel label3 = new JLabel();
-		label3.setIcon(new ImageIcon("GatlingPea.png"));
-                btn.add(label3);
-                gameBoard.revalidate();
-                overall.repaint();                                                             
-                setSunCount(getSunCount()-200);
-                counterChange();
-		btn.putClientProperty("plant", 4);
-            }
-	    if (r.isSelected()){
-		if((int) btn.getClientProperty("plant") == 1) {
-		    setSf(getSf()-1);
 		}
-		btn.removeAll();
-		gameBoard.revalidate();
-	    }
+
+		if (B.isSelected() && getSunCount()>=100 && (Integer) plantHere == 0 && (Integer) zombieHere == 0){
+		    JLabel label1 = new JLabel();
+		    label1.setIcon(new ImageIcon("ShooterOne.png"));
+		    btn.add(label1);
+		    gameBoard.revalidate();
+		    overall.repaint();
+		    setSunCount(getSunCount()-100);
+		    counterChange();
+		    btn.putClientProperty("plant", 2);
+		}
+
+		if (C.isSelected() && getSunCount()>=125 && (Integer) plantHere == 0 && (Integer) zombieHere == 0){
+		    JLabel label2 = new JLabel();
+		    label2.setIcon(new ImageIcon("Chomper.png"));
+		    btn.add(label2);
+		    gameBoard.revalidate();
+		    overall.repaint();                                                             
+		    setSunCount(getSunCount()-125);
+		    counterChange();
+		    btn.putClientProperty("plant", 3);
+		}
 	    
-	    JButton btn1 = (JButton) e.getSource();
-	    System.out.println("clicked column " + btn1.getClientProperty("column") + ", row " + btn1.getClientProperty("row"));
-	    System.out.println(btn1.getClientProperty("column"));
-	    btn1.validate();
-	    overall.repaint();
+		if (D.isSelected() && getSunCount()>=200 && (Integer) plantHere == 0 && (Integer) zombieHere == 0){
+		    JLabel label3 = new JLabel();
+		    label3.setIcon(new ImageIcon("GatlingPea.png"));
+		    btn.add(label3);
+		    gameBoard.revalidate();
+		    overall.repaint();                                                             
+		    setSunCount(getSunCount()-200);
+		    counterChange();
+		    btn.putClientProperty("plant", 4);
+		}
+		if (r.isSelected()){
+		    if((int) btn.getClientProperty("plant") == 1) {
+			setSf(getSf()-1);
+		    }
+		    btn.removeAll();
+		    gameBoard.revalidate();
+		}
+		/*
+		JButton btn1 = (JButton) e.getSource();
+		
+		  System.out.println("clicked column " + btn1.getClientProperty("column") + ", row " + btn1.getClientProperty("row"));
+		  System.out.println(btn1.getClientProperty("column"));
+		
+		btn1.validate();
+		overall.repaint();
+		*/
+		//System.out.println("Projectile: " + btn.getClientProperty("projectile"));
+		System.out.println("Plant: " + btn.getClientProperty("plant"));
+		System.out.println("Zombie: " + btn.getClientProperty("zombie"));
+		System.out.println("ZombieHealth: " + btn.getClientProperty("zombieHealth"));
+	    }
 	}
     }
 
@@ -286,9 +299,6 @@ public class Gui1 extends JFrame{
 		isEnded = false;
 		setSunCount(10000);
 		counterChange();
-		
-		addZombie(8, random.nextInt(5), 10);
-		//zombieMove();
 	    }
 	}
     }
@@ -300,18 +310,18 @@ public class Gui1 extends JFrame{
 	    the game and to end the game.
 	*/
 	public void actionPerformed(ActionEvent e){
-	    if (isEnded == false && isStarted == true) {
-		setSunCount(0);
-		counterChange();
+	    setSunCount(0);
+	    counterChange();
 		
-		gameBoard.remove(play);
-		gameBoard.validate();
-		gameBoard.repaint();
+	    gameBoard.remove(play);
+	    gameBoard.validate();
+	    gameBoard.repaint();
 		
-		gridMaker();
-		isStarted = false;
-		isEnded = true;
-	    }
+	    gridMaker();
+	    isStarted = false; 
+	    isEnded = true;
+	    youLose = false;
+	    statusChange();
 	}
     }
     
@@ -324,7 +334,6 @@ public class Gui1 extends JFrame{
 
 	play = new JPanel(new GridLayout(5,9)); 
 	grid = new JButton[9][5];
-	image = new JLabel();
 	int counterX = 0;
 	int counterY = 0;
 	for (int y = 0; y < 5; y++){
@@ -343,8 +352,9 @@ public class Gui1 extends JFrame{
 	    @param x  the column to place the button in
 	    @param y  the row to place the button in
 	*/
-	grid[x][y] = new JButton(String.format("[%d,%d]", y, x));
-	grid[x][y].add(image);                                                                                                           grid[x][y].setPreferredSize(new Dimension(125,125));
+	grid[x][y] = new JButton(/*String.format("[%d,%d]", y, x)*/);  
+	grid[x][y].setPreferredSize(new Dimension(125,125));
+        grid[x][y].setContentAreaFilled(false);
 	grid[x][y].addActionListener(new PlantEdit());
 	grid[x][y].putClientProperty("column", x);
 	grid[x][y].putClientProperty("row", y);
@@ -352,6 +362,7 @@ public class Gui1 extends JFrame{
 	grid[x][y].putClientProperty("zombieHealth",-1);
 	grid[x][y].putClientProperty("plant", 0);
 	grid[x][y].putClientProperty("plantHealth", -1);
+	grid[x][y].putClientProperty("projectile",0);
 	play.add(grid[x][y]);
     }
     
@@ -361,29 +372,74 @@ public class Gui1 extends JFrame{
 	} catch (Exception e) {}
     }
     
-
-    
-    private class Move extends TimerTask{
+    private class Zombie extends TimerTask{
 	/**
-	   Creates movement of images from one button to the next.
+	   Creates movement of zombies from one button to the next.
 	*/
 
 	public void run(){
-	    //statusChange();
-	    zombieMove();
-            statusChange();
-	    zombieMath += 0.5;
-	    if (zombieNum <= 5 && zombieMath == 1) {
-		addZombie(8, random.nextInt(5), 10);
-		zombieNum += 1;
+	    if (isStarted){
+	        moveZombie();
+		statusChange();
+		zombieMath += 0.5;
+		if (zombieNum <= 5 && zombieMath == 1) {
+		    addZombie(8, random.nextInt(5), 10);
+		    zombieNum += 1;
 		zombieMath = 0.0;
+		}
 	    }
-	    setSunCount(getSunCount() + ((getSf()/2)+1)*25);
-	    counterChange(); 
 	}
     }
 
     
+    private class ProjectileSet extends TimerTask{
+	public void run(){
+	    if (isStarted){
+		for (int y = 4; y>=0; y--){
+		    for (int x = 8; x>=0; x--){
+			int set = 0;
+			if ((int) grid[x][y].getClientProperty("plant") == 2){
+			    set = 1;
+			}
+			if ((int) grid[x][y].getClientProperty("plant") == 4){
+			    set = 2;
+			}
+			addProjectile(x,y,set);
+			if (zombieDie(x,y)){
+			    grid[x][y].removeAll();
+			    grid[x][y].putClientProperty("zombie", 0);
+			}
+		    }
+		}
+	    }
+	}
+    }
+
+    private class ProjectileMove extends TimerTask{
+	public void run(){
+	    if (isStarted){
+		for (int y = 4; y>=0; y--){
+		    for (int x = 8; x>=0; x--){
+		        moveProjectile(x,y);
+			if (zombieDie(x,y)){
+			    grid[x][y].removeAll();
+			    grid[x][y].putClientProperty("zombie", 0);
+			}
+		    }
+		}
+	    }
+	}
+    }
+    
+    private class SunUpdate extends TimerTask{
+	public void run(){
+	    if (isStarted){
+		setSunCount(getSunCount() + ((getSf()/2)+1)*25);
+		counterChange(); 
+	    }
+	}
+    }
+    /*
     private class Projectile {
 	private String projectile = "projectile.png";
 
@@ -409,13 +465,14 @@ public class Gui1 extends JFrame{
 	public Image getImage() {
 	    return image;
 	}
-	/*
+	
 	public boolean isVisible() {
 	    return visible;
 	}
-	*/
+	
 	
     }
+    */
     //ClassLoader cl = this.getClass().getClassLoader();
 
     public void addZombie(int column, int row, int health){
@@ -438,13 +495,13 @@ public class Gui1 extends JFrame{
     }
 
     
-    public void zombieMove(){
+    public void moveZombie(){
 	/**
 	   Creates movement for zombies which is utilized in the Move class
 	*/
 	for (int y = 0; y<5; y++){
 	    for (int x = 0; x<9; x++){
-		if((Integer) grid[x][y].getClientProperty("zombie")==1 && x-1 >= 0){
+		if((Integer) grid[x][y].getClientProperty("zombie")>1 && x-1 >= 0){
 		    //System.out.println(x+" "+y);
 		    if ((Integer) grid[x-1][y].getClientProperty("plant") > 0) {
 			grid[x-1][y].removeAll();
@@ -457,31 +514,58 @@ public class Gui1 extends JFrame{
 		    } else {
 			addZombie(x-1, y, (Integer) grid[x][y].getClientProperty("zombieHealth"));
 			grid[x][y].removeAll();
-			//grid[x][y].setIcon(null);
 			grid[x][y].putClientProperty("zombie", 0);
 			grid[x][y].putClientProperty("zombieHealth", 0);
-			//gameBoard.revalidate();
 		    }
 		} if((Integer) grid[x][y].getClientProperty("zombie")==1 && x-1 < 1) {
 		    youLose = true;
-		} //else System.out.println("clear");
+		} 
 	    }	
 	}
 	gameBoard.revalidate();
 	overall.repaint();
-	//revalidate
+    }
+
+    public void addProjectile(int column, int row, int projectileSet){
+	JLabel image = new JLabel();
+	image.setIcon(new ImageIcon("projectile.png"));
+	if (projectileSet == 1){
+	    grid[column+1][row].add(image);
+	    grid[column+1][row].putClientProperty("projectile", projectileSet);
+	    gameBoard.revalidate();               
+	}
+	if (projectileSet == 2){
+	    grid[column+1][row].add(image);
+	    grid[column+1][row].putClientProperty("projectile", projectileSet);
+	    gameBoard.revalidate();
+	}
+    }
+
+    public void moveProjectile(int column, int row){
+	int x = column;
+	int y = row;
+	if((Integer) grid[x][y].getClientProperty("projectile")>0 && x < 8){
+	    if ((Integer) grid[x+1][y].getClientProperty("zombie") > 0) {
+		grid[x+1][y].putClientProperty("zombieHealth", (int) grid[x+1][y].getClientProperty("zombieHealth") - (int) grid[x][y].getClientProperty("projectile"));
+	    } 
+	    addProjectile(x, y, (int) grid[x][y].getClientProperty("projectile"));
+	    grid[x][y].removeAll();                                                          
+	    grid[x][y].putClientProperty("projectile", 0);
+	}
+	if ((int) grid[x][y].getClientProperty("projectile")>0 && x == 8){
+	    grid[x][y].removeAll();
+	}
+	gameBoard.revalidate();
     }
     
-    //don't know if needed??
-    public boolean toDie(JButton button) {
+    public boolean zombieDie(int column, int row) {
 	boolean die = false;
-	if ((Integer) button.getClientProperty("zombieHealth") == 0) {
+	if ((Integer) grid[column][row].getClientProperty("zombieHealth") == 0) {
 	    die = true;
-	} else if ((Integer) button.getClientProperty("plantHealth") == 0) {
+	} /*
+	    else if ((Integer) grid[column][row].getClientProperty("plantHealth") == 0) {
 	    die = true;
-	}/* else if ((Integer) button.getClientProperty("")) {
-
-}*/
+	    }*/
 	return die;
     }
 
