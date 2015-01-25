@@ -169,6 +169,12 @@ public class Gui1 extends JFrame{
     }
 
     public void setSf(int sunflowerNumber){
+	/**
+	   Applies changes towards the number of "Sunflower" plants in the game 
+	   towards the variable keeping track of the number.
+	   @param sunflowerNumber  the number that the variable "sunflowerNumber"
+	   is meant to become
+	*/
 	this.sunflowerNumber = sunflowerNumber;
     }
 
@@ -251,15 +257,13 @@ public class Gui1 extends JFrame{
 		    } else if ((int) btn.getClientProperty("plant") > 0) {
 			btn.putClientProperty("plant", 0);
 		    } else if ((int) btn.getClientProperty("zombie") > 0) {
-			int newZombieHealth = btn.getClientProperty("zombieHealth");
-			addZombie(column, row, newZombieHealth);
+			int newZombieHealth = (int) btn.getClientProperty("zombieHealth");
+			addZombie(col, row, newZombieHealth);
 		    }
+		    btn.putClientProperty("plant", 0);
 		    overall.repaint();
 		    gameBoard.revalidate();
 		}
-		System.out.println("Plant: " + btn.getClientProperty("plant"));
-		System.out.println("Zombie: " + btn.getClientProperty("zombie"));
-		System.out.println("ZombieHealth: " + btn.getClientProperty("zombieHealth"));
 	    }
 	}
     }
@@ -345,12 +349,6 @@ public class Gui1 extends JFrame{
 	play.add(grid[x][y]);
     }
     
-    public static void wait(int n) {
-	try {
-	    Thread.sleep(n);
-	} catch (Exception e) {}
-    }
-    
     private class Zombie extends TimerTask{
 	/**
 	   Creates movement of zombies from one button to the next.
@@ -372,6 +370,10 @@ public class Gui1 extends JFrame{
 
     
     private class ProjectileSet extends TimerTask{
+	/**
+	   Places a projectile onto the screen based on whether or not a shooter
+	   plant has been planted.
+	*/
 	public void run(){
 	    if (isStarted){
 		for (int y = 4; y>=0; y--){
@@ -395,6 +397,9 @@ public class Gui1 extends JFrame{
     }
 
     private class ProjectileMove extends TimerTask{
+	/**
+	   Moves an existing projectile from one button to another.
+	*/
 	public void run(){
 	    if (isStarted){
 		for (int y = 4; y>=0; y--){
@@ -412,6 +417,9 @@ public class Gui1 extends JFrame{
     }
     
     private class SunUpdate extends TimerTask{
+	/**
+	   Changes the sun counter regularly.
+	*/
 	public void run(){
 	    if (isStarted){
 		setSunCount(getSunCount() + ((getSf()/2)+1)*25);
@@ -421,6 +429,9 @@ public class Gui1 extends JFrame{
     }
 
     private class Chomper extends TimerTask {
+	/**
+	   Allows the chomper to perform its ability at regular intervals.
+	*/
 	public void run() {
 	    if (isStarted) {
 		chomp();
@@ -429,6 +440,14 @@ public class Gui1 extends JFrame{
     }
 
     public void addPlant(int column, int row, int type) {
+	/**
+	   Places a certain type of plant on a button depending on the radio buttons 
+	   selected.
+	   @param column  the column to place the plant in
+	   @param row  the row to place the plant in
+	   @param type  the kind of plant to place
+	   Key: 1 = Sunflower, 2 = Pea Shooter, 3 = Chomper, 4 = Gatling Pea Shooter
+	*/
 	if (type == 1){
 	    JLabel label = new JLabel();
 	    label.setIcon(new ImageIcon("Sunflower.png"));
@@ -522,6 +541,12 @@ public class Gui1 extends JFrame{
     }
 
     public void addProjectile(int column, int row, int projectileSet){
+	/** 
+	    Creates the projectile in front of a shooter plant.
+	    @param column  the column to place the projectile in
+	    @param row  the row to place the projectile in
+	    @param projectileSet  the strength the projectile should have
+	*/
 	if (column < 8){
 	    grid[column+1][row].putClientProperty("parentAlive", 100+(column*10)+row);
 	    JLabel projimg = new JLabel();
@@ -534,6 +559,12 @@ public class Gui1 extends JFrame{
     }
 
     public void moveProjectile(int column, int row){
+	/**
+	   Moves existing projectiles to the right and applies effects on 
+	   zombies if applicable in a situation.
+	   @param column  the column the projectile is currently on
+	   @param row  the row the projectile is currently on
+	*/
 	int x = column;
 	int y = row;
 	int newZombieHealth = (int) grid[x][y].getClientProperty("zombieHealth") - (int) grid[x][y].getClientProperty("projectile");
@@ -558,9 +589,14 @@ public class Gui1 extends JFrame{
 	}
 	overall.repaint();
 	gameBoard.revalidate();
+	}
     }
     
     public void chomp() {
+	/** 
+	    Allows chomper plants to defeat zombies in front of them and placing limits
+	    on their ability to do so.
+	*/
 	for (int row = 0; row < 5; row++) {
 	    for (int column = 0; column < 9; column++) {
 		if ((int) grid[column][row].getClientProperty("plant") == 3) {
@@ -583,6 +619,9 @@ public class Gui1 extends JFrame{
     }
 
     public void killProjectiles() {
+	/**
+	   Gets rid of any projectiles coming from a shooter that has been eliminated.
+	*/
 	for (int y = 0; y<5; y++){
             for (int x = 0; x<9; x++){
 		int cc = ((int) grid[x][y].getClientProperty("parentAlive") - 100)/10;
@@ -595,6 +634,12 @@ public class Gui1 extends JFrame{
     }
 
     public boolean zombieDie(int column, int row) {
+	/**
+	   Establishes whether or not the image on a button should disappear.
+	   @param button  the JButton which has a zombie or plant on it
+	   @return the boolean which determines whether or not the object 
+	   disappears
+	*/
 	boolean die = false;
 	if ((Integer) grid[column][row].getClientProperty("zombieHealth") == 0 && (Integer) grid[column][row].getClientProperty("zombie") >= 1) {
 	    die = true;
