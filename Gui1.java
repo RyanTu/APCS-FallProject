@@ -63,7 +63,8 @@ public class Gui1 extends JFrame{
     public Gui1() {
 	/**
 	   Gui1 is the constructor responsible for making the game display. Within
-	   it are many methods which create the game board seen when playing. 
+	   it are many methods which create the game board seen when playing and 
+	   the timers which determine when events occur. 
 	*/
 
 	overall = new JFrame();
@@ -127,7 +128,7 @@ public class Gui1 extends JFrame{
 	timer.scheduleAtFixedRate(new ProjectileSet(), 0, 2500);
 	timer.scheduleAtFixedRate(new ProjectileMove(), 0, 1000);
 	timer.scheduleAtFixedRate(new Chomper(), 0, 1000);
-	timer.scheduleAtFixedRate(new killProjs(), 0, 500);
+	timer.scheduleAtFixedRate(new killProjs(), 0, 1000);
 
 	overall.pack();
 	overall.setVisible(true);
@@ -179,7 +180,6 @@ public class Gui1 extends JFrame{
 	this.sunflowerNumber = sunflowerNumber;
     }
 
-    //number of zombies left to kill
     public int getTarget() {
 	/**
 	   Obtains the number of "zombies" that need to be killed before winning
@@ -190,12 +190,12 @@ public class Gui1 extends JFrame{
     }
 
     public void setTarget(int n) {
-	this.target = n;
 	/**
 	   Applies changes towards the number of "zombies" that still need to 
 	   be defeated.
 	   @param n  the number that the variable "target" is meant to become
 	*/
+	this.target = n;
     }
 
     public void statusChange() {
@@ -381,6 +381,10 @@ public class Gui1 extends JFrame{
     }
 
     private class killProjs extends TimerTask {
+	/**
+	   Determines whether or not a projectile should no longer be displayed
+	   based on the status of the shooter it is derived from.
+	 */
 	public void run() {
 	    if (isStarted) {
 		killProjectiles();
@@ -518,14 +522,16 @@ public class Gui1 extends JFrame{
 	   @param row  the row to place the "zombie" in
 	   @param health  the amount of endurance the "zombie" should have and 
 	   the number of hits the "zombie" can receive before disappearing
+	   @param type  the kind of zombie that should be added
+	   Key: 1 = Normal, 2 = Conehead
 	*/
 	JLabel image2 = new JLabel();
-	if (type == 1) {
+	if (type == 1 && (int) grid[column][row].getClientProperty("zombie") == 0) {
 	    image2.setIcon(new ImageIcon("Zombie1.png"));
 	    grid[column][row].add(image2);
 	    gameBoard.revalidate();               
 	    grid[column][row].putClientProperty("zombie", 1);
-	} if (type == 2) {
+	} if (type == 2 && (int) grid[column][row].getClientProperty("zombie") == 0) {
 	    image2.setIcon(new ImageIcon("conehead.png"));
             grid[column][row].add(image2);
             gameBoard.revalidate();      
@@ -669,6 +675,12 @@ public class Gui1 extends JFrame{
     }
 
     public boolean zombieBehind(int col, int row) {
+	/**
+	   Determines if a projectile has passed beyond a zombie it should have hit.
+	   @param col  the column the projectile is in
+	   @param row  the row the projectile is in
+	   @return the boolean which determines if the projectile has passed a zombie
+	 */
 	boolean zombehind = false;
 	for (int x = 0; x < col; x++) {
 	    if ((int) grid[x][row].getClientProperty("zombie") > 0) {
@@ -681,7 +693,8 @@ public class Gui1 extends JFrame{
     public boolean zombieDie(int column, int row) {
 	/**
 	   Establishes whether or not the image on a button should disappear.
-	   @param button  the JButton which has a zombie or plant on it
+	   @param column  the column the zombie is on
+	   @param row  the row the zombie is on
 	   @return the boolean which determines whether or not the object 
 	   disappears
 	*/
