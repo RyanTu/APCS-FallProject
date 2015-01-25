@@ -520,7 +520,7 @@ public class Gui1 extends JFrame{
 	    for (int x = 0; x<9; x++){
 		if((Integer) grid[x][y].getClientProperty("zombie")>=1 && x-1 >= 0){
 		    int type = (int) grid[x][y].getClientProperty("zombie");
-		    if ((Integer) grid[x-1][y].getClientProperty("plant") > 0) {
+		    if ((Integer) grid[x-1][y].getClientProperty("plant") > 0 && (Integer) grid[x-1][y].getClientProperty("plant") != 3) {
 			grid[x-1][y].removeAll();
 			grid[x-1][y].putClientProperty("plant", 0);
 			grid[x-1][y].putClientProperty("plantHealth",0);
@@ -608,7 +608,13 @@ public class Gui1 extends JFrame{
 	    for (int column = 0; column < 9; column++) {
 		if ((int) grid[column][row].getClientProperty("plant") == 3) {
 		    if ((int) grid[column][row].getClientProperty("cooldown") > 0) {
-			grid[column][row].putClientProperty("cooldown", (int) grid[column][row].getClientProperty("cooldown")-1);
+			if ((int) grid[column][row].getClientProperty("zombie") > 0) {
+			    grid[column][row].removeAll();
+			    grid[column][row].putClientProperty("plant", 0);
+			    addZombie(column, row, (int) grid[column][row].getClientProperty("zombieHealth"), (int) grid[column][row].getClientProperty("zombie"));
+			} else {
+			    grid[column][row].putClientProperty("cooldown", (int) grid[column][row].getClientProperty("cooldown")-1);
+			}
 		    } else if ((int) grid[column][row].getClientProperty("cooldown") == 0) {
 			if ((int) grid[column][row].getClientProperty("zombie") > 0) {
 			    grid[column][row].putClientProperty("zombie", 0);
