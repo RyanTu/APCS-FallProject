@@ -221,52 +221,28 @@ public class Gui1 extends JFrame{
 	public void actionPerformed(ActionEvent e){
 	    if (!youLose){
 		JButton btn = (JButton) e.getSource();
+		int col = (int) btn.getClientProperty("column");
+		int row = (int) btn.getClientProperty("row");
 		Object plantHere = btn.getClientProperty("plant");
 		Object zombieHere = btn.getClientProperty("zombie");
 		if (A.isSelected() && getSunCount()>=50 && (Integer) plantHere == 0 && (Integer) zombieHere == 0){
-		    JLabel label = new JLabel();
-		    label.setIcon(new ImageIcon("Sunflower.png"));
-		    btn.add(label);
-		    gameBoard.revalidate();
-		    overall.repaint();
+		    addPlant(col, row, 1);
 		    setSunCount(getSunCount()-50);
-		    counterChange();
-		    setSf(getSf()+1);
-		    btn.putClientProperty("plant", 1);
 		}
 
 		if (B.isSelected() && getSunCount()>=100 && (Integer) plantHere == 0 && (Integer) zombieHere == 0){
-		    JLabel label1 = new JLabel();
-		    label1.setIcon(new ImageIcon("ShooterOne.png"));
-		    btn.add(label1);
-		    gameBoard.revalidate();
-		    overall.repaint();
+		    addPlant(col, row, 2);
 		    setSunCount(getSunCount()-100);
-		    counterChange();
-		    btn.putClientProperty("plant", 2);
 		}
 
 		if (C.isSelected() && getSunCount()>=125 && (Integer) plantHere == 0 && (Integer) zombieHere == 0){
-		    JLabel label2 = new JLabel();
-		    label2.setIcon(new ImageIcon("Chomper.png"));
-		    btn.add(label2);
-		    btn.putClientProperty("cooldown", 3);
-		    gameBoard.revalidate();
-		    overall.repaint();                                                             
+		    addPlant(col, row, 3);
 		    setSunCount(getSunCount()-125);
-		    counterChange();
-		    btn.putClientProperty("plant", 3);
 		}
 	    
 		if (D.isSelected() && getSunCount()>=200 && (Integer) plantHere == 0 && (Integer) zombieHere == 0){
-		    JLabel label3 = new JLabel();
-		    label3.setIcon(new ImageIcon("GatlingPea.png"));
-		    btn.add(label3);
-		    gameBoard.revalidate();
-		    overall.repaint();                                                             
+		    addPlant(col, row, 4);
 		    setSunCount(getSunCount()-200);
-		    counterChange();
-		    btn.putClientProperty("plant", 4);
 		}
 		if (r.isSelected()){
 		    if((int) btn.getClientProperty("plant") == 1) {
@@ -359,6 +335,7 @@ public class Gui1 extends JFrame{
 	grid[x][y].putClientProperty("plantHealth", -1);
 	grid[x][y].putClientProperty("projectile",0);
 	grid[x][y].putClientProperty("cooldown", 0);
+	grid[x][y].setBackground(Color.white);
 	play.add(grid[x][y]);
     }
     
@@ -444,6 +421,50 @@ public class Gui1 extends JFrame{
 	}
     }
 
+    public void addPlant(int column, int row, int type) {
+	if (type == 1){
+	    JLabel label = new JLabel();
+	    label.setIcon(new ImageIcon("Sunflower.png"));
+	    grid[column][row].add(label);
+	    gameBoard.revalidate();
+	    overall.repaint();
+	    counterChange();
+	    setSf(getSf()+1);
+	    grid[column][row].putClientProperty("plant", 1);
+	}
+
+	if (type == 2){
+	    JLabel label1 = new JLabel();
+	    label1.setIcon(new ImageIcon("ShooterOne.png"));
+	    grid[column][row].add(label1);
+	    gameBoard.revalidate();
+	    overall.repaint();
+	    counterChange();
+	    grid[column][row].putClientProperty("plant", 2);
+	}
+
+	if (type == 3){
+	    JLabel label2 = new JLabel();
+	    label2.setIcon(new ImageIcon("Chomper.png"));
+	    grid[column][row].add(label2);
+	    grid[column][row].putClientProperty("cooldown", 3);
+	    gameBoard.revalidate();
+	    overall.repaint();
+	    counterChange();
+	    grid[column][row].putClientProperty("plant", 3);
+	}
+
+	if (type == 4){
+	    JLabel label3 = new JLabel();
+	    label3.setIcon(new ImageIcon("GatlingPea.png"));
+	    grid[column][row].add(label3);
+	    gameBoard.revalidate();
+	    overall.repaint();
+	    counterChange();
+	    grid[column][row].putClientProperty("plant", 4);
+	}
+    }
+
     public void addZombie(int column, int row, int health){
 	/**
 	   Adds "zombies" into the game field from the right.
@@ -514,25 +535,24 @@ public class Gui1 extends JFrame{
     public void moveProjectile(int column, int row){
 	int x = column;
 	int y = row;
+	int newZombieHealth = (int) grid[x][y].getClientProperty("zombieHealth") - (int) grid[x][y].getClientProperty("projectile");
+	int plantType = (int) grid[x][y].getClientProperty("plant");
 	if((Integer) grid[x][y].getClientProperty("projectile")>0 && x < 8){
-	    /*
-	    if ((Integer) grid[x+1][y].getClientProperty("zombie") > 0) {
-		grid[x+1][y].putClientProperty("zombieHealth", (int) grid[x+1][y].getClientProperty("zombieHealth") - (int) grid[x][y].getClientProperty("projectile"));
-	    } 
-	    */
-	    int newZombieHealth = (int) grid[x][y].getClientProperty("zombieHealth") - (int) grid[x][y].getClientProperty("projectile");
 	    addProjectile(x, y, (int) grid[x][y].getClientProperty("projectile"));
 	    grid[x][y].removeAll();                                                          
 	    if ((Integer) grid[x][y].getClientProperty("zombie") > 0) {
-                //grid[x][y].putClientProperty("zombieHealth", (int) grid[x][y].getClientProperty("zombieHealth") - (int) grid[x][y].getClientProperty("projectile"));
 		addZombie(x, y, newZombieHealth);
-            }
+            } if (plantType > 0) {
+		addPlant(x, y, plantType);
+	    }
 	    grid[x][y].putClientProperty("projectile", 0);
 	}
 	if ((int) grid[x][y].getClientProperty("projectile")>0 && x == 8){
 	    grid[x][y].removeAll();
 	    if ((int) grid[x][y].getClientProperty("zombie")>0){
 	        addZombie(x,y,(int) grid[x][y].getClientProperty("zombieHealth"));
+	    } if (plantType > 0) {
+		addPlant(x, y, plantType);
 	    }
 	}
 	overall.repaint();
