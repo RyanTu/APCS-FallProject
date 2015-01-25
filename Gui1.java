@@ -125,7 +125,7 @@ public class Gui1 extends JFrame{
         timer.scheduleAtFixedRate(new Zombie(), 0, 4000);
 	timer.scheduleAtFixedRate(new ProjectileSet(), 0, 2500);
 	timer.scheduleAtFixedRate(new ProjectileMove(), 0, 1000);
-	timer.scheduleAtFixedRate(new SunUpdate(), 0, 4500);
+	timer.scheduleAtFixedRate(new SunUpdate(), 0, 2000);
 	timer.scheduleAtFixedRate(new Chomper(), 0, 1000);
 	timer.scheduleAtFixedRate(new killProjs(), 0, 500);
 
@@ -252,6 +252,7 @@ public class Gui1 extends JFrame{
 		    setSunCount(getSunCount()-200);
 		}
 		if (r.isSelected()){
+		    int type = (int) btn.getClientProperty("zombie");
 		    btn.removeAll();		    
 		    if((int) btn.getClientProperty("plant") == 1) {
 			setSf(getSf()-1);
@@ -259,12 +260,14 @@ public class Gui1 extends JFrame{
 			btn.putClientProperty("plant", 0);
 		    } else if ((int) btn.getClientProperty("zombie") > 0) {
 			int newZombieHealth = (int) btn.getClientProperty("zombieHealth");
-			addZombie(col, row, newZombieHealth);
+			addZombie(col, row, newZombieHealth, type);
 		    }
 		    btn.putClientProperty("plant", 0);
 		    overall.repaint();
 		    gameBoard.revalidate();
 		}
+		counterChange();
+		overall.repaint();
 	    }
 	}
     }
@@ -357,13 +360,21 @@ public class Gui1 extends JFrame{
 
 	public void run(){
 	    if (isStarted){
-	        moveZombie();
+		moveZombie();
 		statusChange();
 		zombieMath += 0.5;
-		if (!youLose && zombieMath == 1) {
-		    addZombie(8, random.nextInt(5), 10);
+		if (!youLose && zombieMath == 1 && target > 25) {
+		    addZombie(8, random.nextInt(5), 10, 1);
 		    zombieNum += 1;
-		zombieMath = 0.0;
+		    zombieMath = 0.0;
+		} if (!youLose && zombieMath == 0.5 && target <= 25) {
+		    addZombie(8, random.nextInt(5), 10, 2);
+		    zombieNum++;
+		    zombieMath = 0.0;
+		} if (!youLose && zombieMath == 1 && target <= 25) {
+		    addZombie(8, random.nextInt(5), 10, 1);
+		    zombieNum++;
+		    zombieMath = 0.0;
 		}
 	    }
 	}
@@ -500,7 +511,7 @@ public class Gui1 extends JFrame{
 	}
     }
 
-    public void addZombie(int column, int row, int health){
+    public void addZombie(int column, int row, int health, int type){
 	/**
 	   Adds "zombies" into the game field from the right.
 	   @param column  the column to place the "zombie" in
@@ -509,10 +520,17 @@ public class Gui1 extends JFrame{
 	   the number of hits the "zombie" can receive before disappearing
 	*/
 	JLabel image2 = new JLabel();
-	image2.setIcon(new ImageIcon("Zombie1.png"));
-	grid[column][row].add(image2);
-	gameBoard.revalidate();               
-	grid[column][row].putClientProperty("zombie", 1);
+	if (type == 0) {
+	    image2.setIcon(new ImageIcon("Zombie1.png"));
+	    grid[column][row].add(image2);
+	    gameBoard.revalidate();               
+	    grid[column][row].putClientProperty("zombie", 1);
+	} if (type == 1) {
+	    image2.setIcon(new ImageIcon("conehead.png"));
+            grid[column][row].add(image2);
+            gameBoard.revalidate();      
+            grid[column][row].putClientProperty("zombie", 1);
+	}
 	grid[column][row].putClientProperty("zombieHealth", health);
 	overall.repaint();
     }
@@ -526,21 +544,22 @@ public class Gui1 extends JFrame{
 	    for (int x = 0; x<9; x++){
 		if((Integer) grid[x][y].getClientProperty("zombie")>=1 && x-1 >= 0){
 		    System.out.println(x+" "+y);
+		    int type = (int) grid[x][y].getClientProperty("zombie");
 		    if ((Integer) grid[x-1][y].getClientProperty("plant") > 0) {
 			grid[x-1][y].removeAll();
 			grid[x-1][y].putClientProperty("plant", 0);
 			grid[x-1][y].putClientProperty("plantHealth",0);
-			addZombie(x-1, y, (Integer) grid[x][y].getClientProperty("zombieHealth"));
+			addZombie(x-1, y, (Integer) grid[x][y].getClientProperty("zombieHealth"), type);
                         grid[x][y].removeAll();                                                          
                         grid[x][y].putClientProperty("zombie", 0);
                         grid[x][y].putClientProperty("zombieHealth", 0);
 		    } else {
-			addZombie(x-1, y, (Integer) grid[x][y].getClientProperty("zombieHealth"));
+			addZombie(x-1, y, (Integer) grid[x][y].getClientProperty("zombieHealth"), type);
 			grid[x][y].removeAll();
 			grid[x][y].putClientProperty("zombie", 0);
 			grid[x][y].putClientProperty("zombieHealth", 0);
 		    }
-		} if((Integer) grid[x][y].getClientProperty("zombie")==1 && x-1 < 1) {
+		} if((Integer) grid[x][y].getClientProperty("zombie")>=1 && x-1 < 1) {
 		    youLose = true;
 		} 
 	    }	
@@ -578,12 +597,13 @@ public class Gui1 extends JFrame{
 	int y = row;
 	int newZombieHealth = (int) grid[x][y].getClientProperty("zombieHealth") - (int) grid[x][y].getClientProperty("projectile");
 	int plantType = (int) grid[x][y].getClientProperty("plant");
+	int type = (int) grid[x][y].getClientProperty("zombie");
 	if ((Integer) grid[x][y].getClientProperty("parentAlive") > 0) {
 	    if ((Integer) grid[x][y].getClientProperty("projectile")>0 && x < 8){
 		addProjectile(x, y, (int) grid[x][y].getClientProperty("projectile"));
 		grid[x][y].removeAll();                                                          
 		if ((Integer) grid[x][y].getClientProperty("zombie") > 0) {
-		    addZombie(x, y, newZombieHealth);
+		    addZombie(x, y, newZombieHealth, type);
 		} if (plantType > 0) {
 		    addPlant(x, y, plantType);
 		}
@@ -592,7 +612,7 @@ public class Gui1 extends JFrame{
 	} else if ((int) grid[x][y].getClientProperty("projectile")>0 && x == 8){
 	    grid[x][y].removeAll();
 	    if ((int) grid[x][y].getClientProperty("zombie")>0){
-		addZombie(x,y,newZombieHealth);
+		addZombie(x,y,newZombieHealth, type);
 	    } if (plantType > 0) {
 		addPlant(x, y, plantType);
 	}
@@ -633,7 +653,7 @@ public class Gui1 extends JFrame{
 	*/
 	for (int y = 0; y<5; y++){
             for (int x = 0; x<9; x++){
-		if ((int) grid[x][y].getClientProperty("parentAlive") - 100 >= 0) {
+		if ((int) grid[x][y].getClientProperty("parentAlive") - 100 >= 0 && (int) grid[x][y].getClientProperty("projectile") > 0) {
 		    int cc = ((int) grid[x][y].getClientProperty("parentAlive") - 100)/10;
 		    int rr = ((int) grid[x][y].getClientProperty("parentAlive") - 100)%10;
 		    if ((int) grid[cc][rr].getClientProperty("plant") == 0) {
