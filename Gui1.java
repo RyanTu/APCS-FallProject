@@ -126,6 +126,7 @@ public class Gui1 extends JFrame{
 	timer.scheduleAtFixedRate(new ProjectileSet(), 0, 2500);
 	timer.scheduleAtFixedRate(new ProjectileMove(), 0, 1000);
 	timer.scheduleAtFixedRate(new SunUpdate(), 0, 1500);
+	timer.scheduleAtFixedRate(newChomper(), 0, 1000);
 
 	overall.pack();
 	overall.setVisible(true);
@@ -196,7 +197,7 @@ public class Gui1 extends JFrame{
 	   not the player has won or lost and how many zombies still need to be
 	   played)
 	*/
-	if (youLose == true) {
+	if (youLose) {
 	    statusLabel = "Status: You lose";
 	    isStarted = false;
 	    isEnded = true;
@@ -249,6 +250,7 @@ public class Gui1 extends JFrame{
 		    JLabel label2 = new JLabel();
 		    label2.setIcon(new ImageIcon("Chomper.png"));
 		    btn.add(label2);
+		    btn.putClientProperty("cooldown", 3);
 		    gameBoard.revalidate();
 		    overall.repaint();                                                             
 		    setSunCount(getSunCount()-125);
@@ -271,6 +273,7 @@ public class Gui1 extends JFrame{
 			setSf(getSf()-1);
 		    }
 		    btn.removeAll();
+		    overall.repaint();
 		    gameBoard.revalidate();
 		}
 		System.out.println("Plant: " + btn.getClientProperty("plant"));
@@ -286,7 +289,7 @@ public class Gui1 extends JFrame{
 	   button. This is responsible for starting the game up.
 	*/
 	public void actionPerformed(ActionEvent e){
-	    if (isStarted == false && isEnded == true) {
+	    if (!isStarted && isEnded) {
 		isStarted = true;     
 		isEnded = false;
 		setSunCount(75);
@@ -355,6 +358,7 @@ public class Gui1 extends JFrame{
 	grid[x][y].putClientProperty("plant", 0);
 	grid[x][y].putClientProperty("plantHealth", -1);
 	grid[x][y].putClientProperty("projectile",0);
+	grid[x][y].putClientProperty("cooldown", 0);
 	play.add(grid[x][y]);
     }
     
@@ -374,7 +378,7 @@ public class Gui1 extends JFrame{
 	        moveZombie();
 		statusChange();
 		zombieMath += 0.5;
-		if (zombieNum <= 5 && zombieMath == 1) {
+		if (!youLose && zombieMath == 1) {
 		    addZombie(8, random.nextInt(5), 10);
 		    zombieNum += 1;
 		zombieMath = 0.0;
@@ -428,6 +432,14 @@ public class Gui1 extends JFrame{
 	    if (isStarted){
 		setSunCount(getSunCount() + ((getSf()/2)+1)*25);
 		counterChange(); 
+	    }
+	}
+    }
+
+    private class Chomper extends TimerTask {
+	public void run() {
+	    if (isStarted) {
+		chomp();
 	    }
 	}
     }
@@ -520,6 +532,28 @@ public class Gui1 extends JFrame{
 	gameBoard.revalidate();
     }
     
+    public void chomp() {
+	for (int row = 0; row < 5; row++) {
+	    for (int column = 0; column < 9; column++) {
+		if ((int) grid[column][row].getClientProperty("plant") == 3) {
+		    System.out.println((int) grid[column][row].getClientProperty("cooldown"));
+		    if ((int) grid[column][row].getClientProperty("cooldown") > 0) {
+			grid[column][row].putClientProperty("cooldown", (int) grid[column][row].getClientProperty("cooldown")-1);
+		    } else if ((int) grid[column][row].getClientProperty("cooldown") == 0) {
+			if ((int) grid[column+1][row].getClientProperty("zombie") > 0) {
+			    grid[column+1][row].putClientProperty("zombie", 0);
+			    grid[column+1][row].putClientProperty("zombieHealth", 0);
+			    grid[column+1][row].removeAll();
+			    grid[column+1][row].putClientProperty("cooldown", 3);
+			    setTarget(getTarget() - 1);
+			    statusChange();
+			}
+		    }
+		}
+	    }
+	}
+    }
+
     public boolean zombieDie(int column, int row) {
 	boolean die = false;
 	if ((Integer) grid[column][row].getClientProperty("zombieHealth") == 0 && (Integer) grid[column][row].getClientProperty("zombie") >= 1) {
