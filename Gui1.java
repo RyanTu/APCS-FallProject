@@ -1,6 +1,6 @@
 /** 
     The NotPvZ program creates a game interface meant to simulate a 
-    simplified version of the game Plants vs.&nbsp; Zombies.
+    simplified version of the game Plants vs. Zombies.
     @author Yasmeen Roumie
     @author Ryan Tu
  */
@@ -273,16 +273,6 @@ public class Gui1 extends JFrame{
 		    btn.removeAll();
 		    gameBoard.revalidate();
 		}
-		/*
-		JButton btn1 = (JButton) e.getSource();
-		
-		  System.out.println("clicked column " + btn1.getClientProperty("column") + ", row " + btn1.getClientProperty("row"));
-		  System.out.println(btn1.getClientProperty("column"));
-		
-		btn1.validate();
-		overall.repaint();
-		*/
-		//System.out.println("Projectile: " + btn.getClientProperty("projectile"));
 		System.out.println("Plant: " + btn.getClientProperty("plant"));
 		System.out.println("Zombie: " + btn.getClientProperty("zombie"));
 		System.out.println("ZombieHealth: " + btn.getClientProperty("zombieHealth"));
@@ -441,41 +431,6 @@ public class Gui1 extends JFrame{
 	    }
 	}
     }
-    /*
-    private class Projectile {
-	private String projectile = "projectile.png";
-
-	private int dx, dy, x, y;
-	private Image image;
-
-	public Projectile() {
-	    ImageIcon img = new ImageIcon(this.getClass().getResource(projectile));
-	    image = img.getImage();
-	    x=40;
-	    y=60;
-	}
-	public void move() {
-	    x+=dx;
-	    y+=dy;
-	}
-	public int getX() {
-	    return x;
-	}
-	public int getY() {
-	    return y;
-	}
-	public Image getImage() {
-	    return image;
-	}
-	
-	public boolean isVisible() {
-	    return visible;
-	}
-	
-	
-    }
-    */
-    //ClassLoader cl = this.getClass().getClassLoader();
 
     public void addZombie(int column, int row, int health){
 	/**
@@ -488,9 +443,6 @@ public class Gui1 extends JFrame{
 	JLabel image2 = new JLabel();
 	image2.setIcon(new ImageIcon("Zombie1.png"));
 	grid[column][row].add(image2);
-	//Image img = ImageIO.read(getClass().getResource("Zombie.png"));
-	//ImageIcon img = new ImageIcon(getClass().getResource("Zombie.png"));
-	//grid[column][row].setIcon(img);
 	gameBoard.revalidate();               
 	grid[column][row].putClientProperty("zombie", 1);
 	grid[column][row].putClientProperty("zombieHealth", health);
@@ -571,20 +523,7 @@ public class Gui1 extends JFrame{
 	    die = true;
 	    setTarget(getTarget()-1);
 	    statusChange();
-	} /*
-	    else if ((Integer) grid[column][row].getClientProperty("plantHealth") == 0) {
-	    die = true;
-	    }*/
+	}
 	return die;
     }
-
-
-    public void populate() {
-	ImageIcon ShooterOne = new ImageIcon("ShooterOne.png");
-	//play1.getValueAt(0,0) = new JButton("plant");
-	//play1.setIcon(ShooterOne);
-    }
-    
-
-
 }
