@@ -338,16 +338,18 @@ public class Gui1 extends JFrame{
 		moveZombie();
 		statusChange();
 		zombieMath += 0.5;
-		if (!youLose && zombieMath == 1 && target > 25) {
-		    addZombie(8, random.nextInt(5), 10, 1);
+		if (!youLose && zombieMath == 1 && target > 35) {
+		    addZombie(8, random.nextInt(5), 5, 1);
 		    zombieNum += 1;
 		    zombieMath = 0.0;
-		} if (!youLose && zombieMath == 0.5 && target <= 25) {
-		    addZombie(8, random.nextInt(5), 15, 2);
+		} if (!youLose && zombieMath == 1 && target > 20 && target <= 35) {
+		    int type = random.nextInt(2)+1;
+		    addZombie(8, random.nextInt(5), 5*type, type);
 		    zombieNum++;
 		    zombieMath = 0.0;
-		} if (!youLose && zombieMath == 1 && target <= 25) {
-		    addZombie(8, random.nextInt(5), 10, 1);
+		} if (!youLose && zombieMath == 1 && target > 0 && target <= 20) {
+		    int typee =random.nextInt(3)+1;
+		    addZombie(8, random.nextInt(5), 5*typee, typee);
 		    zombieNum++;
 		    zombieMath = 0.0;
 		}
@@ -507,7 +509,12 @@ public class Gui1 extends JFrame{
             grid[column][row].add(image2);
             gameBoard.revalidate();      
             grid[column][row].putClientProperty("zombie", 2);
-	}
+	} if (type == 3 && (int) grid[column][row].getClientProperty("zombie") == 0) {
+            image2.setIcon(new ImageIcon("buckethead.png"));
+            grid[column][row].add(image2);
+            gameBoard.revalidate();
+            grid[column][row].putClientProperty("zombie", 3);
+        }
 	grid[column][row].putClientProperty("zombieHealth", health);
 	overall.repaint();
     }
