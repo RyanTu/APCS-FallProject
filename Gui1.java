@@ -123,8 +123,8 @@ public class Gui1 extends JFrame{
 	bottom.add(status, BorderLayout.PAGE_END);
 	
         timer.scheduleAtFixedRate(new Zombie(), 0, 2500);
-	timer.scheduleAtFixedRate(new ProjectileSet(), 0, 2000);
-	timer.scheduleAtFixedRate(new ProjectileMove(), 0, 1250);
+	timer.scheduleAtFixedRate(new ProjectileSet(), 0, 3000);
+	timer.scheduleAtFixedRate(new ProjectileMove(), 0, 1500);
 	timer.scheduleAtFixedRate(new SunUpdate(), 0, 1000);
 
 	overall.pack();
@@ -202,6 +202,8 @@ public class Gui1 extends JFrame{
 	    isEnded = true;
 	} else if (getTarget() == 0) {
 	    statusLabel = "Status: You win";
+	    isStarted = false;
+	    isEnded = true;
 	} else {
 	    statusLabel = "Status: " + getTarget() + " left";
 	}
@@ -502,7 +504,7 @@ public class Gui1 extends JFrame{
 	for (int y = 0; y<5; y++){
 	    for (int x = 0; x<9; x++){
 		if((Integer) grid[x][y].getClientProperty("zombie")>1 && x-1 >= 0){
-		    //System.out.println(x+" "+y);
+		    System.out.println(x+" "+y);
 		    if ((Integer) grid[x-1][y].getClientProperty("plant") > 0) {
 			grid[x-1][y].removeAll();
 			grid[x-1][y].putClientProperty("plant", 0);
@@ -527,17 +529,19 @@ public class Gui1 extends JFrame{
     }
 
     public void addProjectile(int column, int row, int projectileSet){
-	JLabel image = new JLabel();
-	image.setIcon(new ImageIcon("projectile.png"));
-	if (projectileSet == 1){
-	    grid[column+1][row].add(image);
-	    grid[column+1][row].putClientProperty("projectile", projectileSet);
+	if (column < 8){
+	    JLabel image = new JLabel();
+	    image.setIcon(new ImageIcon("projectile.png"));
+	    if (projectileSet == 1){
+		grid[column+1][row].add(image);
+		grid[column+1][row].putClientProperty("projectile", projectileSet);
 	    gameBoard.revalidate();               
-	}
-	if (projectileSet == 2){
-	    grid[column+1][row].add(image);
-	    grid[column+1][row].putClientProperty("projectile", projectileSet);
-	    gameBoard.revalidate();
+	    }
+	    if (projectileSet == 2){
+		grid[column+1][row].add(image);
+		grid[column+1][row].putClientProperty("projectile", projectileSet);
+		gameBoard.revalidate();
+	    }
 	}
     }
 
@@ -554,6 +558,9 @@ public class Gui1 extends JFrame{
 	}
 	if ((int) grid[x][y].getClientProperty("projectile")>0 && x == 8){
 	    grid[x][y].removeAll();
+	    if ((int) grid[x][y].getClientProperty("zombie")>0){
+	        addZombie(x,y,(int) grid[x][y].getClientProperty("zombieHealth"));
+	    }
 	}
 	gameBoard.revalidate();
     }
@@ -562,6 +569,8 @@ public class Gui1 extends JFrame{
 	boolean die = false;
 	if ((Integer) grid[column][row].getClientProperty("zombieHealth") == 0) {
 	    die = true;
+	    setTarget(getTarget()-1);
+	    statusChange();
 	} /*
 	    else if ((Integer) grid[column][row].getClientProperty("plantHealth") == 0) {
 	    die = true;
