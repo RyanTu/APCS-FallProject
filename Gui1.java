@@ -40,14 +40,28 @@ public class Gui1 extends JFrame{
     private JButton[][] grid;
 
     private JButton start, reset;
-
+    /**
+       This variable holds the number of suns in the game. Suns are the currency used to buy plants which can then be planted.
+    */
     public int sunCount = 0;
+    /**
+       This variable holds the number of sunflower plants in the game. This is important because the suns will be updated at a time interval and this is determined by adding what is already currently present to the number of sunflowers multiplied by a constant.
+    */
     public int sunflowerNumber = 0;
+    /**
+       This variable determines the number of zombies you need to kill. If you can defeat all the zombies (or get this to 0), you win!
+    */
     public int target = 50;
-    public int zombieNum = 0;
 
+    /**
+       This variable is used to determine which zombie's turn it is to be placed.
+    */
     public double zombieMath = 0.0;
 
+    /** 
+	Determines what the label "Status" should display (whether or not the player won, lost, or still needs to 
+	defeat zombies).
+    */
     public String statusLabel = "";
 
     private Random random = new Random();   
@@ -79,7 +93,7 @@ public class Gui1 extends JFrame{
 	
         B = new JRadioButton("Pea Shooter (100 suns)");
 	
-        C = new JRadioButton("Chomper (125 suns)");
+        C = new JRadioButton("Chomper (175 suns)");
 
         D = new JRadioButton("Gatling Pea Shooter (200 suns)");
 
@@ -224,9 +238,9 @@ public class Gui1 extends JFrame{
 		    setSunCount(getSunCount()-100);
 		}
 
-		if (C.isSelected() && getSunCount()>=125 && (Integer) plantHere == 0 && (Integer) zombieHere == 0){
+		if (C.isSelected() && getSunCount()>=175 && (Integer) plantHere == 0 && (Integer) zombieHere == 0){
 		    addPlant(col, row, 3);
-		    setSunCount(getSunCount()-125);
+		    setSunCount(getSunCount()-175);
 		}
 	    
 		if (D.isSelected() && getSunCount()>=200 && (Integer) plantHere == 0 && (Integer) zombieHere == 0){
@@ -340,17 +354,14 @@ public class Gui1 extends JFrame{
 		zombieMath += 0.5;
 		if (!youLose && zombieMath == 1 && target > 35) {
 		    addZombie(8, random.nextInt(5), 5, 1);
-		    zombieNum += 1;
 		    zombieMath = 0.0;
 		} if (!youLose && zombieMath == 1 && target > 20 && target <= 35) {
 		    int type = random.nextInt(2)+1;
 		    addZombie(8, random.nextInt(5), 5*type, type);
-		    zombieNum++;
 		    zombieMath = 0.0;
 		} if (!youLose && zombieMath == 1 && target > 0 && target <= 20) {
 		    int typee =random.nextInt(3)+1;
 		    addZombie(8, random.nextInt(5), 5*typee, typee);
-		    zombieNum++;
 		    zombieMath = 0.0;
 		}
 	    }
@@ -510,7 +521,7 @@ public class Gui1 extends JFrame{
             gameBoard.revalidate();      
             grid[column][row].putClientProperty("zombie", 2);
 	} if (type == 3 && (int) grid[column][row].getClientProperty("zombie") == 0) {
-            image2.setIcon(new ImageIcon("buckethead.png"));
+            image2.setIcon(new ImageIcon("buckethead.jpg"));
             grid[column][row].add(image2);
             gameBoard.revalidate();
             grid[column][row].putClientProperty("zombie", 3);
