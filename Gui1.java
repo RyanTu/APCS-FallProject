@@ -127,6 +127,7 @@ public class Gui1 extends JFrame{
 	timer.scheduleAtFixedRate(new ProjectileMove(), 0, 1000);
 	timer.scheduleAtFixedRate(new SunUpdate(), 0, 1500);
 	timer.scheduleAtFixedRate(new Chomper(), 0, 1000);
+	timer.scheduleAtFixedRate(new killProjs(), 0, 500);
 
 	overall.pack();
 	overall.setVisible(true);
@@ -368,6 +369,13 @@ public class Gui1 extends JFrame{
 	}
     }
 
+    private class killProjs extends TimerTask {
+	public void run() {
+	    if (isStarted) {
+		killProjectiles();
+	    }
+	}
+    }
     
     private class ProjectileSet extends TimerTask{
 	/**
@@ -385,7 +393,9 @@ public class Gui1 extends JFrame{
 			if ((int) grid[x][y].getClientProperty("plant") == 4){
 			    set = 2;
 			}
-			addProjectile(x,y,set);
+			if (set == 1 || set == 2) {
+			    addProjectile(x,y,set);
+			}
 			if (zombieDie(x,y)){
 			    grid[x][y].removeAll();
 			    grid[x][y].putClientProperty("zombie", 0);
@@ -411,7 +421,6 @@ public class Gui1 extends JFrame{
 			}
 		    }
 		}
-		killProjectiles();
 	    }
 	}
     }
@@ -624,10 +633,12 @@ public class Gui1 extends JFrame{
 	*/
 	for (int y = 0; y<5; y++){
             for (int x = 0; x<9; x++){
-		int cc = ((int) grid[x][y].getClientProperty("parentAlive") - 100)/10;
-		int rr = ((int) grid[x][y].getClientProperty("parentAlive") - 100)%10;
-		if (grid[cc][rr].getClientProperty("plant") == 0) {
-		    grid[x][y].putClientProperty("parentAlive", 0);
+		if ((int) grid[x][y].getClientProperty("parentAlive") - 100 >= 0) {
+		    int cc = ((int) grid[x][y].getClientProperty("parentAlive") - 100)/10;
+		    int rr = ((int) grid[x][y].getClientProperty("parentAlive") - 100)%10;
+		    if ((int) grid[cc][rr].getClientProperty("plant") == 0) {
+			grid[x][y].putClientProperty("parentAlive", 0);
+		    }
 		}
 	    }
         }
