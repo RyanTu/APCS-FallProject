@@ -122,10 +122,10 @@ public class Gui1 extends JFrame{
 	status = new JLabel("Status: 50 left", JLabel.CENTER);
 	bottom.add(status, BorderLayout.PAGE_END);
 	
-        timer.scheduleAtFixedRate(new Zombie(), 0, 2500);
-	timer.scheduleAtFixedRate(new ProjectileSet(), 0, 3000);
-	timer.scheduleAtFixedRate(new ProjectileMove(), 0, 1500);
-	timer.scheduleAtFixedRate(new SunUpdate(), 0, 1000);
+        timer.scheduleAtFixedRate(new Zombie(), 0, 4000);
+	timer.scheduleAtFixedRate(new ProjectileSet(), 0, 2500);
+	timer.scheduleAtFixedRate(new ProjectileMove(), 0, 1000);
+	timer.scheduleAtFixedRate(new SunUpdate(), 0, 1500);
 
 	overall.pack();
 	overall.setVisible(true);
@@ -200,7 +200,7 @@ public class Gui1 extends JFrame{
 	    statusLabel = "Status: You lose";
 	    isStarted = false;
 	    isEnded = true;
-	} else if (getTarget() == 0) {
+	} else if (getTarget() <= 0) {
 	    statusLabel = "Status: You win";
 	    isStarted = false;
 	    isEnded = true;
@@ -289,7 +289,7 @@ public class Gui1 extends JFrame{
 	    if (isStarted == false && isEnded == true) {
 		isStarted = true;     
 		isEnded = false;
-		setSunCount(10000);
+		setSunCount(75);
 		counterChange();
 	    }
 	}
@@ -446,6 +446,7 @@ public class Gui1 extends JFrame{
 	gameBoard.revalidate();               
 	grid[column][row].putClientProperty("zombie", 1);
 	grid[column][row].putClientProperty("zombieHealth", health);
+	overall.repaint();
     }
 
     
@@ -455,7 +456,7 @@ public class Gui1 extends JFrame{
 	*/
 	for (int y = 0; y<5; y++){
 	    for (int x = 0; x<9; x++){
-		if((Integer) grid[x][y].getClientProperty("zombie")>1 && x-1 >= 0){
+		if((Integer) grid[x][y].getClientProperty("zombie")>=1 && x-1 >= 0){
 		    System.out.println(x+" "+y);
 		    if ((Integer) grid[x-1][y].getClientProperty("plant") > 0) {
 			grid[x-1][y].removeAll();
@@ -495,6 +496,7 @@ public class Gui1 extends JFrame{
 		gameBoard.revalidate();
 	    }
 	}
+	overall.repaint();
     }
 
     public void moveProjectile(int column, int row){
@@ -514,12 +516,13 @@ public class Gui1 extends JFrame{
 	        addZombie(x,y,(int) grid[x][y].getClientProperty("zombieHealth"));
 	    }
 	}
+	overall.repaint();
 	gameBoard.revalidate();
     }
     
     public boolean zombieDie(int column, int row) {
 	boolean die = false;
-	if ((Integer) grid[column][row].getClientProperty("zombieHealth") == 0) {
+	if ((Integer) grid[column][row].getClientProperty("zombieHealth") == 0 && (Integer) grid[column][row].getClientProperty("zombie") >= 1) {
 	    die = true;
 	    setTarget(getTarget()-1);
 	    statusChange();
