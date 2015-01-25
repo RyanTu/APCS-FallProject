@@ -126,7 +126,7 @@ public class Gui1 extends JFrame{
 	timer.scheduleAtFixedRate(new ProjectileSet(), 0, 2500);
 	timer.scheduleAtFixedRate(new ProjectileMove(), 0, 1000);
 	timer.scheduleAtFixedRate(new SunUpdate(), 0, 1500);
-	timer.scheduleAtFixedRate(newChomper(), 0, 1000);
+	timer.scheduleAtFixedRate(new Chomper(), 0, 1000);
 
 	overall.pack();
 	overall.setVisible(true);
@@ -495,15 +495,15 @@ public class Gui1 extends JFrame{
 
     public void addProjectile(int column, int row, int projectileSet){
 	if (column < 8){
-	    JLabel image = new JLabel();
-	    image.setIcon(new ImageIcon("projectile.png"));
+	    JLabel projimg = new JLabel();
+	    projimg.setIcon(new ImageIcon("projectile.png"));
 	    if (projectileSet == 1){
-		grid[column+1][row].add(image);
+		grid[column+1][row].add(projimg);
 		grid[column+1][row].putClientProperty("projectile", projectileSet);
 	    gameBoard.revalidate();               
 	    }
 	    if (projectileSet == 2){
-		grid[column+1][row].add(image);
+		grid[column+1][row].add(projimg);
 		grid[column+1][row].putClientProperty("projectile", projectileSet);
 		gameBoard.revalidate();
 	    }
@@ -515,11 +515,18 @@ public class Gui1 extends JFrame{
 	int x = column;
 	int y = row;
 	if((Integer) grid[x][y].getClientProperty("projectile")>0 && x < 8){
+	    /*
 	    if ((Integer) grid[x+1][y].getClientProperty("zombie") > 0) {
 		grid[x+1][y].putClientProperty("zombieHealth", (int) grid[x+1][y].getClientProperty("zombieHealth") - (int) grid[x][y].getClientProperty("projectile"));
 	    } 
+	    */
+	    int newZombieHealth = (int) grid[x][y].getClientProperty("zombieHealth") - (int) grid[x][y].getClientProperty("projectile");
 	    addProjectile(x, y, (int) grid[x][y].getClientProperty("projectile"));
 	    grid[x][y].removeAll();                                                          
+	    if ((Integer) grid[x][y].getClientProperty("zombie") > 0) {
+                //grid[x][y].putClientProperty("zombieHealth", (int) grid[x][y].getClientProperty("zombieHealth") - (int) grid[x][y].getClientProperty("projectile"));
+		addZombie(x, y, newZombieHealth);
+            }
 	    grid[x][y].putClientProperty("projectile", 0);
 	}
 	if ((int) grid[x][y].getClientProperty("projectile")>0 && x == 8){
