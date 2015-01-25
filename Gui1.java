@@ -125,7 +125,7 @@ public class Gui1 extends JFrame{
         timer.scheduleAtFixedRate(new Zombie(), 0, 4000);
 	timer.scheduleAtFixedRate(new ProjectileSet(), 0, 2500);
 	timer.scheduleAtFixedRate(new ProjectileMove(), 0, 1000);
-	timer.scheduleAtFixedRate(new SunUpdate(), 0, 1500);
+	timer.scheduleAtFixedRate(new SunUpdate(), 0, 4500);
 	timer.scheduleAtFixedRate(new Chomper(), 0, 1000);
 	timer.scheduleAtFixedRate(new killProjs(), 0, 500);
 
