@@ -46,7 +46,6 @@ public class Gui1 extends JFrame{
     public int target = 50;
     public int zombieNum = 0;
 
-    public double sunMath = 0.0;
     public double zombieMath = 0.0;
 
     public String statusLabel = "";
@@ -56,9 +55,6 @@ public class Gui1 extends JFrame{
     private boolean youLose = false;
 
     public Timer timer = new Timer();
-    public int speed = 1000;
-
-
 
     /**
        Gui1 is the constructor responsible for making the game display. Within it are many methods which create the game board seen when playing and the timers which determine when events occur. 
@@ -123,9 +119,9 @@ public class Gui1 extends JFrame{
 	
 	timer.scheduleAtFixedRate(new SunUpdate(), 0, 2000);
         timer.scheduleAtFixedRate(new Zombie(), 0, 4000);
-	timer.scheduleAtFixedRate(new ProjectileSet(), 0, 2500);
+	timer.scheduleAtFixedRate(new ProjectileSet(), 0, 2000);
 	timer.scheduleAtFixedRate(new ProjectileMove(), 0, 1000);
-	timer.scheduleAtFixedRate(new Chomper(), 0, 1000);
+	timer.scheduleAtFixedRate(new Chomper(), 0, 4000);
 	timer.scheduleAtFixedRate(new killProjs(), 0, 1000);
 
 	overall.pack();
@@ -315,7 +311,7 @@ public class Gui1 extends JFrame{
 	@param y  the row to place the button in
     */
     public void buttonMaker(int x, int y) {
-	grid[x][y] = new JButton(/*String.format("[%d,%d]", y, x)*/);  
+	grid[x][y] = new JButton();  
 	grid[x][y].setPreferredSize(new Dimension(125,125));
         grid[x][y].setContentAreaFilled(false);
 	grid[x][y].addActionListener(new PlantEdit());
@@ -523,7 +519,6 @@ public class Gui1 extends JFrame{
 	for (int y = 0; y<5; y++){
 	    for (int x = 0; x<9; x++){
 		if((Integer) grid[x][y].getClientProperty("zombie")>=1 && x-1 >= 0){
-		    System.out.println(x+" "+y);
 		    int type = (int) grid[x][y].getClientProperty("zombie");
 		    if ((Integer) grid[x-1][y].getClientProperty("plant") > 0) {
 			grid[x-1][y].removeAll();
@@ -612,15 +607,15 @@ public class Gui1 extends JFrame{
 	for (int row = 0; row < 5; row++) {
 	    for (int column = 0; column < 9; column++) {
 		if ((int) grid[column][row].getClientProperty("plant") == 3) {
-		    System.out.println((int) grid[column][row].getClientProperty("cooldown"));
 		    if ((int) grid[column][row].getClientProperty("cooldown") > 0) {
 			grid[column][row].putClientProperty("cooldown", (int) grid[column][row].getClientProperty("cooldown")-1);
 		    } else if ((int) grid[column][row].getClientProperty("cooldown") == 0) {
-			if ((int) grid[column+1][row].getClientProperty("zombie") > 0) {
-			    grid[column+1][row].putClientProperty("zombie", 0);
-			    grid[column+1][row].putClientProperty("zombieHealth", 0);
-			    grid[column+1][row].removeAll();
-			    grid[column+1][row].putClientProperty("cooldown", 3);
+			if ((int) grid[column][row].getClientProperty("zombie") > 0) {
+			    grid[column][row].putClientProperty("zombie", 0);
+			    grid[column][row].putClientProperty("zombieHealth", 0);			  
+			    grid[column][row].removeAll();
+			    addPlant(column, row, 3);
+			    grid[column][row].putClientProperty("cooldown", 3);
 			    setTarget(getTarget() - 1);
 			    statusChange();
 			}
