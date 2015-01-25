@@ -3,7 +3,7 @@
     simplified version of the game Plants vs. Zombies.
     @author Yasmeen Roumie
     @author Ryan Tu
- */
+*/
 
 import java.io.*;
 import java.util.*;
@@ -60,12 +60,10 @@ public class Gui1 extends JFrame{
 
 
 
+    /**
+       Gui1 is the constructor responsible for making the game display. Within it are many methods which create the game board seen when playing and the timers which determine when events occur. 
+    */
     public Gui1() {
-	/**
-	   Gui1 is the constructor responsible for making the game display. Within
-	   it are many methods which create the game board seen when playing and 
-	   the timers which determine when events occur. 
-	*/
 
 	overall = new JFrame();
 	overall.setSize(600,600);
@@ -135,75 +133,66 @@ public class Gui1 extends JFrame{
 
     }
 
+    /**
+       Obtains the current number of "suns" (currency used to insert various
+       plants) available.
+       @return the number of "suns" currently in the game
+    */
     public int getSunCount(){
-	/**
-	   Obtains the current number of "suns" (currency used to insert various
-	   plants) available.
-	   @return the number of "suns" currently in the game
-	*/
 	return sunCount;
     }
 
+    /** 
+	Applies changes towards the number of "suns" in the game towards the variable holding the number.
+	@param sunCount  the number that the variable "sunCount" is meant to  become
+    */
     public void setSunCount(int sunCount) {
-	/** 
-	    Applies changes towards the number of "suns" in the game towards the
-	    variable holding the number.
-	    @param sunCount  the number that the variable "sunCount" is meant to 
-	    become
-	*/
         this.sunCount = sunCount;
     }
 
+    /**
+       Reflects any change in the variable holding the number of "suns" in the label which displays the number.
+    */
     public void counterChange(){
-	/**
-	   Reflects any change in the variable holding the number of "suns" in
-	   the label which displays the number.
-	*/
 	counter.setText("Counter: " + getSunCount());
     }
 
+    /**
+       Obtains the number of "Sunflower" plants currently on the field.
+       @return the number of "Sunflower" on the grid
+    */
     public int getSf(){
-	/**
-	   Obtains the number of "Sunflower" plants currently on the field.
-	   @return the number of "Sunflower" on the grid
-	*/
 	return sunflowerNumber;
     }
 
+    /**
+       Applies changes towards the number of "Sunflower" plants in the game towards the variable keeping track of the number.
+       @param sunflowerNumber  the number that the variable "sunflowerNumber" is meant to become
+    */
     public void setSf(int sunflowerNumber){
-	/**
-	   Applies changes towards the number of "Sunflower" plants in the game 
-	   towards the variable keeping track of the number.
-	   @param sunflowerNumber  the number that the variable "sunflowerNumber"
-	   is meant to become
-	*/
 	this.sunflowerNumber = sunflowerNumber;
     }
 
+    /**
+       Obtains the number of "zombies" that need to be killed before winning the game.
+       @return the number of "zombies" that need to be defeated
+    */
     public int getTarget() {
-	/**
-	   Obtains the number of "zombies" that need to be killed before winning
-	   the game.
-	   @return the number of "zombies" that need to be defeated
-	*/
 	return target;
     }
 
+    /**
+       Applies changes towards the number of "zombies" that still need to  be defeated.
+       @param n  the number that the variable "target" is meant to become
+    */
     public void setTarget(int n) {
-	/**
-	   Applies changes towards the number of "zombies" that still need to 
-	   be defeated.
-	   @param n  the number that the variable "target" is meant to become
-	*/
 	this.target = n;
     }
 
+    /**
+       Edits the label which states the game's current position (whether or not the player has won or lost and how many zombies still need to be played)
+    */
     public void statusChange() {
-	/**
-	   Edits the label which states the game's current position (whether or
-	   not the player has won or lost and how many zombies still need to be
-	   played)
-	*/
 	if (youLose) {
 	    statusLabel = "Status: You lose";
 	    isStarted = false;
@@ -218,13 +207,10 @@ public class Gui1 extends JFrame{
 	status.setText(statusLabel);
     }
 	
+    /**
+       Contains an action listener which will determine which radio buttons have been selected and perform that action on the grid. This is the planting mechanism and removing mechanism for the plants in this game.
+    */
     private class PlantEdit implements ActionListener{
-	/**
-	   Contains an action listener which will determine which radio 
-	   buttons have been selected and perform that action on the grid. This
-	   is the planting mechanism and removing mechanism for the plants in 
-	   this game.
-	*/
 	public void actionPerformed(ActionEvent e){
 	    if (!youLose){
 		JButton btn = (JButton) e.getSource();
@@ -272,11 +258,10 @@ public class Gui1 extends JFrame{
 	}
     }
 
+    /**
+       Contains an action listener that corresponds with the "Start" button. This is responsible for starting the game up.
+    */
     private class Begin implements ActionListener{
-	/**
-	   Contains an action listener that corresponds with the "Start" 
-	   button. This is responsible for starting the game up.
-	*/
 	public void actionPerformed(ActionEvent e){
 	    if (!isStarted && isEnded) {
 		isStarted = true;     
@@ -287,12 +272,10 @@ public class Gui1 extends JFrame{
 	}
     }
 
+    /** 
+	Contains an action listener which corresponds with the "Reset" button.This contains the method used to restart all progress in the game and to end the game.
+    */
     private class End implements ActionListener{
-	/** 
-	    Contains an action listener which corresponds with the "Reset" 
-	    button.This contains the method used to restart all progress in 
-	    the game and to end the game.
-	*/
 	public void actionPerformed(ActionEvent e){
 	    setSunCount(0);
 	    counterChange();
@@ -309,12 +292,10 @@ public class Gui1 extends JFrame{
 	}
     }
     
+    /**
+       Initializes the layout and 2D button array utilized in making the grid.Also feeds variables to signify coordinates into the method buttonMaker.
+    */
     public void gridMaker() {	
-	/**
-	   Initializes the layout and 2D button array utilized in making the 
-	   grid.Also feeds variables to signify coordinates into the method 
-	   buttonMaker.
-	*/
 
 	play = new JPanel(new GridLayout(5,9)); 
 	grid = new JButton[9][5];
@@ -328,14 +309,12 @@ public class Gui1 extends JFrame{
 	gameBoard.add(play);
     }
 
+    /** 
+	Uses the variables received from various methods to create the buttons in the grid and to provide them with some client properties.
+	@param x  the column to place the button in
+	@param y  the row to place the button in
+    */
     public void buttonMaker(int x, int y) {
-	/** 
-	    Uses the variables received from various methods to create the 
-	    buttons in the grid and to provide them with some client 
-	    properties.
-	    @param x  the column to place the button in
-	    @param y  the row to place the button in
-	*/
 	grid[x][y] = new JButton(/*String.format("[%d,%d]", y, x)*/);  
 	grid[x][y].setPreferredSize(new Dimension(125,125));
         grid[x][y].setContentAreaFilled(false);
@@ -353,10 +332,10 @@ public class Gui1 extends JFrame{
 	play.add(grid[x][y]);
     }
     
+    /**
+       Creates movement of zombies from one button to the next.
+    */
     private class Zombie extends TimerTask{
-	/**
-	   Creates movement of zombies from one button to the next.
-	*/
 
 	public void run(){
 	    if (isStarted){
@@ -380,23 +359,21 @@ public class Gui1 extends JFrame{
 	}
     }
 
+    /**
+       Determines whether or not a projectile should no longer be displayed based on the status of the shooter it is derived from.
+    */
     private class killProjs extends TimerTask {
-	/**
-	   Determines whether or not a projectile should no longer be displayed
-	   based on the status of the shooter it is derived from.
-	 */
 	public void run() {
 	    if (isStarted) {
 		killProjectiles();
 	    }
 	}
     }
-    
+
+    /**
+       Places a projectile onto the screen based on whether or not a shooter plant has been planted.
+    */ 
     private class ProjectileSet extends TimerTask{
-	/**
-	   Places a projectile onto the screen based on whether or not a shooter
-	   plant has been planted.
-	*/
 	public void run(){
 	    if (isStarted){
 		for (int y = 4; y>=0; y--){
@@ -420,11 +397,10 @@ public class Gui1 extends JFrame{
 	    }
 	}
     }
-
+    /**
+       Moves an existing projectile from one button to another.
+    */
     private class ProjectileMove extends TimerTask{
-	/**
-	   Moves an existing projectile from one button to another.
-	*/
 	public void run(){
 	    if (isStarted){
 		for (int y = 4; y>=0; y--){
@@ -439,11 +415,12 @@ public class Gui1 extends JFrame{
 	    }
 	}
     }
-    
+
+    /**
+       Changes the sun counter regularly.
+    */   
     private class SunUpdate extends TimerTask{
-	/**
-	   Changes the sun counter regularly.
-	*/
+
 	public void run(){
 	    if (isStarted){
 		setSunCount(getSunCount() + ((getSf()/2)+1)*25);
@@ -452,26 +429,25 @@ public class Gui1 extends JFrame{
 	}
     }
 
+    /**
+       Allows the chomper to perform its ability at regular intervals.
+    */
     private class Chomper extends TimerTask {
-	/**
-	   Allows the chomper to perform its ability at regular intervals.
-	*/
 	public void run() {
 	    if (isStarted) {
 		chomp();
 	    }
 	}
     }
-
+    /**
+       Places a certain type of plant on a button depending on the radio buttons selected.
+       @param column  the column to place the plant in
+       @param row  the row to place the plant in
+       @param type  the kind of plant to place
+       Key: 1 = Sunflower, 2 = Pea Shooter, 3 = Chomper, 4 = Gatling Pea Shooter
+    */
     public void addPlant(int column, int row, int type) {
-	/**
-	   Places a certain type of plant on a button depending on the radio buttons 
-	   selected.
-	   @param column  the column to place the plant in
-	   @param row  the row to place the plant in
-	   @param type  the kind of plant to place
-	   Key: 1 = Sunflower, 2 = Pea Shooter, 3 = Chomper, 4 = Gatling Pea Shooter
-	*/
+
 	if (type == 1){
 	    JLabel label = new JLabel();
 	    label.setIcon(new ImageIcon("Sunflower.png"));
@@ -497,7 +473,7 @@ public class Gui1 extends JFrame{
 	    JLabel label2 = new JLabel();
 	    label2.setIcon(new ImageIcon("Chomper.png"));
 	    grid[column][row].add(label2);
-	    grid[column][row].putClientProperty("cooldown", 3);
+	    grid[column][row].putClientProperty("cooldown", 0);
 	    gameBoard.revalidate();
 	    overall.repaint();
 	    counterChange();
@@ -515,16 +491,15 @@ public class Gui1 extends JFrame{
 	}
     }
 
+    /**
+       Adds "zombies" into the game field from the right.
+       @param column  the column to place the "zombie" in
+       @param row  the row to place the "zombie" in
+       @param health  the amount of endurance the "zombie" should have and the number of hits the "zombie" can receive before disappearing
+       @param type  the kind of zombie that should be added
+       Key: 1 = Normal, 2 = Conehead
+    */
     public void addZombie(int column, int row, int health, int type){
-	/**
-	   Adds "zombies" into the game field from the right.
-	   @param column  the column to place the "zombie" in
-	   @param row  the row to place the "zombie" in
-	   @param health  the amount of endurance the "zombie" should have and 
-	   the number of hits the "zombie" can receive before disappearing
-	   @param type  the kind of zombie that should be added
-	   Key: 1 = Normal, 2 = Conehead
-	*/
 	JLabel image2 = new JLabel();
 	if (type == 1 && (int) grid[column][row].getClientProperty("zombie") == 0) {
 	    image2.setIcon(new ImageIcon("Zombie1.png"));
@@ -541,11 +516,10 @@ public class Gui1 extends JFrame{
 	overall.repaint();
     }
 
-    
+    /**
+       Creates movement for zombies which is utilized in the Move class
+    */
     public void moveZombie(){
-	/**
-	   Creates movement for zombies which is utilized in the Move class
-	*/
 	for (int y = 0; y<5; y++){
 	    for (int x = 0; x<9; x++){
 		if((Integer) grid[x][y].getClientProperty("zombie")>=1 && x-1 >= 0){
@@ -574,13 +548,13 @@ public class Gui1 extends JFrame{
 	overall.repaint();
     }
 
+    /** 
+	Creates the projectile in front of a shooter plant.
+	@param column  the column to place the projectile in
+	@param row  the row to place the projectile in
+	@param projectileSet  the strength the projectile should have
+    */
     public void addProjectile(int column, int row, int projectileSet){
-	/** 
-	    Creates the projectile in front of a shooter plant.
-	    @param column  the column to place the projectile in
-	    @param row  the row to place the projectile in
-	    @param projectileSet  the strength the projectile should have
-	*/
 	if (column < 8){
 	    grid[column+1][row].putClientProperty("parentAlive", 100+(column*10)+row);
 	    JLabel projimg = new JLabel();
@@ -592,13 +566,13 @@ public class Gui1 extends JFrame{
 	overall.repaint();
     }
 
+    /**
+       Moves existing projectiles to the right and applies effects on 
+       zombies if applicable in a situation.
+       @param column  the column the projectile is currently on
+       @param row  the row the projectile is currently on
+    */
     public void moveProjectile(int column, int row){
-	/**
-	   Moves existing projectiles to the right and applies effects on 
-	   zombies if applicable in a situation.
-	   @param column  the column the projectile is currently on
-	   @param row  the row the projectile is currently on
-	*/
 	int x = column;
 	int y = row;
 	int newZombieHealth = (int) grid[x][y].getClientProperty("zombieHealth") - (int) grid[x][y].getClientProperty("projectile");
@@ -631,11 +605,10 @@ public class Gui1 extends JFrame{
 	gameBoard.revalidate();
     }
     
+    /** 
+	Allows chomper plants to defeat zombies in front of them and placing limits on their ability to do so.
+    */
     public void chomp() {
-	/** 
-	    Allows chomper plants to defeat zombies in front of them and placing limits
-	    on their ability to do so.
-	*/
 	for (int row = 0; row < 5; row++) {
 	    for (int column = 0; column < 9; column++) {
 		if ((int) grid[column][row].getClientProperty("plant") == 3) {
@@ -657,10 +630,10 @@ public class Gui1 extends JFrame{
 	}
     }
 
+    /**
+       Gets rid of any projectiles coming from a shooter that has been eliminated.
+    */
     public void killProjectiles() {
-	/**
-	   Gets rid of any projectiles coming from a shooter that has been eliminated.
-	*/
 	for (int y = 0; y<5; y++){
             for (int x = 0; x<9; x++){
 		if ((int) grid[x][y].getClientProperty("parentAlive") - 100 >= 0 && (int) grid[x][y].getClientProperty("projectile") > 0) {
@@ -674,13 +647,13 @@ public class Gui1 extends JFrame{
         }
     }
 
+    /**
+       Determines if a projectile has passed beyond a zombie it should have hit.
+       @param col  the column the projectile is in
+       @param row  the row the projectile is in
+       @return the boolean which determines if the projectile has passed a zombie
+    */
     public boolean zombieBehind(int col, int row) {
-	/**
-	   Determines if a projectile has passed beyond a zombie it should have hit.
-	   @param col  the column the projectile is in
-	   @param row  the row the projectile is in
-	   @return the boolean which determines if the projectile has passed a zombie
-	 */
 	boolean zombehind = false;
 	for (int x = 0; x < col; x++) {
 	    if ((int) grid[x][row].getClientProperty("zombie") > 0) {
@@ -690,14 +663,13 @@ public class Gui1 extends JFrame{
 	return zombehind;
     }
 
+    /**
+       Establishes whether or not the image on a button should disappear.
+       @param column  the column the zombie is on
+       @param row  the row the zombie is on
+       @return the boolean which determines whether or not the object disappears
+    */
     public boolean zombieDie(int column, int row) {
-	/**
-	   Establishes whether or not the image on a button should disappear.
-	   @param column  the column the zombie is on
-	   @param row  the row the zombie is on
-	   @return the boolean which determines whether or not the object 
-	   disappears
-	*/
 	boolean die = false;
 	if ((Integer) grid[column][row].getClientProperty("zombieHealth") == 0 && (Integer) grid[column][row].getClientProperty("zombie") >= 1) {
 	    die = true;
