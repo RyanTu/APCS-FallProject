@@ -245,10 +245,15 @@ public class Gui1 extends JFrame{
 		    setSunCount(getSunCount()-200);
 		}
 		if (r.isSelected()){
+		    btn.removeAll();		    
 		    if((int) btn.getClientProperty("plant") == 1) {
 			setSf(getSf()-1);
+		    } else if ((int) btn.getClientProperty("plant") > 0) {
+			btn.putClientProperty("plant", 0);
+		    } else if ((int) btn.getClientProperty("zombie") > 0) {
+			int newZombieHealth = btn.getClientProperty("zombieHealth");
+			addZombie(column, row, newZombieHealth);
 		    }
-		    btn.removeAll();
 		    overall.repaint();
 		    gameBoard.revalidate();
 		}
@@ -335,7 +340,8 @@ public class Gui1 extends JFrame{
 	grid[x][y].putClientProperty("plantHealth", -1);
 	grid[x][y].putClientProperty("projectile",0);
 	grid[x][y].putClientProperty("cooldown", 0);
-	grid[x][y].setBackground(Color.white);
+	grid[x][y].putClientProperty("parentAlive", 0);
+	grid[x][y].setBackground(Color.WHITE);
 	play.add(grid[x][y]);
     }
     
@@ -400,6 +406,7 @@ public class Gui1 extends JFrame{
 			}
 		    }
 		}
+		killProjectiles();
 	    }
 	}
     }
@@ -516,18 +523,12 @@ public class Gui1 extends JFrame{
 
     public void addProjectile(int column, int row, int projectileSet){
 	if (column < 8){
+	    grid[column+1][row].putClientProperty("parentAlive", 100+(column*10)+row);
 	    JLabel projimg = new JLabel();
 	    projimg.setIcon(new ImageIcon("projectile.png"));
-	    if (projectileSet == 1){
-		grid[column+1][row].add(projimg);
-		grid[column+1][row].putClientProperty("projectile", projectileSet);
+	    grid[column+1][row].add(projimg);
+	    grid[column+1][row].putClientProperty("projectile", projectileSet);
 	    gameBoard.revalidate();               
-	    }
-	    if (projectileSet == 2){
-		grid[column+1][row].add(projimg);
-		grid[column+1][row].putClientProperty("projectile", projectileSet);
-		gameBoard.revalidate();
-	    }
 	}
 	overall.repaint();
     }
@@ -537,23 +538,23 @@ public class Gui1 extends JFrame{
 	int y = row;
 	int newZombieHealth = (int) grid[x][y].getClientProperty("zombieHealth") - (int) grid[x][y].getClientProperty("projectile");
 	int plantType = (int) grid[x][y].getClientProperty("plant");
-	if((Integer) grid[x][y].getClientProperty("projectile")>0 && x < 8){
-	    addProjectile(x, y, (int) grid[x][y].getClientProperty("projectile"));
-	    grid[x][y].removeAll();                                                          
-	    if ((Integer) grid[x][y].getClientProperty("zombie") > 0) {
-		addZombie(x, y, newZombieHealth);
-            } if (plantType > 0) {
-		addPlant(x, y, plantType);
+	if ((Integer) grid[x][y].getClientProperty("parentAlive") > 0) {
+	    if ((Integer) grid[x][y].getClientProperty("projectile")>0 && x < 8){
+		addProjectile(x, y, (int) grid[x][y].getClientProperty("projectile"));
+		grid[x][y].removeAll();                                                          
+		if ((Integer) grid[x][y].getClientProperty("zombie") > 0) {
+		    addZombie(x, y, newZombieHealth);
+		} if (plantType > 0) {
+		    addPlant(x, y, plantType);
+		}
+		grid[x][y].putClientProperty("projectile", 0);
 	    }
-	    grid[x][y].putClientProperty("projectile", 0);
-	}
-	if ((int) grid[x][y].getClientProperty("projectile")>0 && x == 8){
+	} else if ((int) grid[x][y].getClientProperty("projectile")>0 && x == 8){
 	    grid[x][y].removeAll();
 	    if ((int) grid[x][y].getClientProperty("zombie")>0){
-	        addZombie(x,y,(int) grid[x][y].getClientProperty("zombieHealth"));
+		addZombie(x,y,newZombieHealth);
 	    } if (plantType > 0) {
 		addPlant(x, y, plantType);
-	    }
 	}
 	overall.repaint();
 	gameBoard.revalidate();
@@ -579,6 +580,18 @@ public class Gui1 extends JFrame{
 		}
 	    }
 	}
+    }
+
+    public void killProjectiles() {
+	for (int y = 0; y<5; y++){
+            for (int x = 0; x<9; x++){
+		int cc = ((int) grid[x][y].getClientProperty("parentAlive") - 100)/10;
+		int rr = ((int) grid[x][y].getClientProperty("parentAlive") - 100)%10;
+		if (grid[cc][rr].getClientProperty("plant") == 0) {
+		    grid[x][y].putClientProperty("parentAlive", 0);
+		}
+	    }
+        }
     }
 
     public boolean zombieDie(int column, int row) {
